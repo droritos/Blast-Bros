@@ -17,7 +17,7 @@ namespace Game.Client
         private bool _isSprinting;
         private NetworkButtons _prevButtons;
 
-        private const float _speedMultiplier = 1.5f;
+        private const float SpeedMultiplier = 1.5f;
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -59,7 +59,7 @@ namespace Game.Client
 
             if (_isSprinting)
             {
-                deltaMove *= _speedMultiplier;
+                deltaMove *= SpeedMultiplier;
             }
 
             if (!Physics.SphereCast(transform.position, capsuleCollider.radius, actualMove.normalized, out RaycastHit hit, deltaMove.magnitude, LayerMask.GetMask("Default")))
@@ -68,7 +68,7 @@ namespace Game.Client
 
                 float speedPercent = actualMove.magnitude;
                 if (_isSprinting)
-                    speedPercent *= _speedMultiplier;
+                    speedPercent *= SpeedMultiplier;
 
                 animator.SetFloat(AnimatorParams.Speed, speedPercent);
             }
@@ -77,10 +77,9 @@ namespace Game.Client
             {
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
                 {
-                    GameManagerRequestBroker.RequestBomb(transform.position /* + transform.forward * 2*/);
+                    GameManager.instance.RequestBombAtLocationRPC(transform.position);
 
                     animator.SetInteger(AnimatorParams.State, (int)PlayerState.PlacingBomb);
-
                 }
 
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
