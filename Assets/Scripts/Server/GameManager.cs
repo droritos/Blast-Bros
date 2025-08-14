@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Fusion;
 using UnityEngine;
 
@@ -9,12 +10,26 @@ namespace Game.Server
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
 
-        private void OnEnable() => GameManagerRequestBroker.OnRequestBomb += RequestBombAtLocationRPC;
+        public static GameManager instance;
 
-        private void OnDisable() => GameManagerRequestBroker.OnRequestBomb -= RequestBombAtLocationRPC;
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+            }
+        }
+
+        public void OnDestroy()
+        {
+            if (instance == this)
+            {
+                instance = null;
+            }
+        }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        private void RequestBombAtLocationRPC(Vector3 position)
+        public void RequestBombAtLocationRPC(Vector3 position)
         {
             Debug.Log("[Server] Placing bomb in location");
             position = gridData.AlignToClosestGridPosition(position);
@@ -23,7 +38,7 @@ namespace Game.Server
             StartCoroutine(BombExplosionCoroutine(position, bombInstance));
         }
 
-        IEnumerator BombExplosionCoroutine(Vector3 bombPosition, NetworkObject bombInstance)
+        private IEnumerator BombExplosionCoroutine(Vector3 bombPosition, NetworkObject bombInstance)
         {
             yield return new WaitForSeconds(0.5f);
 
@@ -41,8 +56,12 @@ namespace Game.Server
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)
         {
             Physics.Linecast(origin, origin + direction * 2f, out RaycastHit hit);
-            if(hit.collider && hit.collider.CompareTag("Destructible"))
-                Runner.Despawn(hit.collider.gameObject.GetComponent<NetworkObject>());
+            if (!hit.collider || !hit.collider.CompareTag("Destructible"))
+            {
+                return;
+            }
+
+            Runner.Despawn(hit.collider.gameObject.GetComponent<NetworkObject>());
         }
     }
 }
