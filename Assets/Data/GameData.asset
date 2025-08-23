@@ -40,5 +40,5 @@ MonoBehaviour:
   - name: Skeleton Warrior
     prefab: {fileID: 4751668848487411745, guid: 37dbf818546048b4c9a44f965c159ef6, type: 3}
     characterIcon: {fileID: 21300000, guid: f66359a50982cf84cb7904d9dc6758bd, type: 3}
+  explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
   bombPrefab: {fileID: 3564519651396155867, guid: 840432ba816e2f9448292e6a82c81911, type: 3}
-  explosionVFX: {fileID: 0}
