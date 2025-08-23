@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GridData
   m_EditorClassIdentifier: 
   startPosition: {x: 0, y: -15.5, z: 3.5}
-  width: 19
-  height: 13
+  width: 17
+  height: 11
   spacing: 2
   blockYOffset: 2

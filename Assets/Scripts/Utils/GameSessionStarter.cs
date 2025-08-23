@@ -1,43 +1,26 @@
 using System.Linq;
-using System.Threading.Tasks;
 using Fusion;
+using Unity.Multiplayer.Playmode;
 using UnityEngine;
 
 namespace Game
 {
     public class GameSessionStarter : MonoBehaviour
     {
-        [SerializeField] private NetworkRunner networkRunnerPrefab;
-
         private const string TestSessionName = "TestSession";
         private const float RetryDelaySeconds = 1f;
+        private const string LevelSceneName = "Level Scene";
 
-        private GameMode GetGameMode()
-        {
-            var tags = Unity.Multiplayer.Playmode.CurrentPlayer.ReadOnlyTags().ToHashSet();
-            if (tags.Contains("Server"))
-            {
-                Debug.Log("Configuration for player: Dedicated Server");
-                return GameMode.Server;
-            }
-
-            if (tags.Contains("Host"))
-            {
-                Debug.Log("Configuration for player: Host");
-                return GameMode.Host;
-            }
-
-            Debug.Log("Configuration for player: Client");
-            return GameMode.Client;
-        }
+        [SerializeField] private NetworkRunner networkRunnerPrefab;
 
         private async void Start()
         {
             var gameMode = GetGameMode();
+            Debug.Log($"Configuration for player: {gameMode}");
 
             if (gameMode == GameMode.Client)
             {
-                await RunClientMode(gameMode);
+                await RunClientMode();
             }
             else
             {
@@ -45,39 +28,58 @@ namespace Game
             }
         }
 
-        private async Task RunClientMode(GameMode gameMode)
+        private static GameMode GetGameMode()
         {
-            NetworkRunner runner = null;
-            var startGameArgs = new StartGameArgs { GameMode = gameMode, SessionName = TestSessionName };
-            StartGameResult result = null;
+#if UNITY_EDITOR
+            var tags = CurrentPlayer.ReadOnlyTags().ToHashSet();
+            return tags.Contains("Server") ? GameMode.Server :
+                tags.Contains("Host") ? GameMode.Host :
+                GameMode.Client;
+#elif UNITY_SERVER
+            return GameMode.Server;
+#else
+            return GameMode.Client;
+#endif
+        }
 
-            while (result is not { Ok: true })
+        private async Awaitable RunClientMode()
+        {
+            var startGameArgs = new StartGameArgs { GameMode = GameMode.Client, SessionName = TestSessionName };
+            StartGameResult result;
+
+            do
             {
-                // Clean up previous runner if it exists
-                if (runner != null)
-                {
-                    Destroy(runner);
-                }
-
-                runner = Instantiate(networkRunnerPrefab);
+                var runner = Instantiate(networkRunnerPrefab);
 
                 Debug.Log("Attempting connection...");
                 result = await runner.StartGame(startGameArgs);
-                Debug.Log($"{result.Ok}, error: {result.ErrorMessage}, shutdown-reason: {result.ShutdownReason}");
+                Debug.Log($"Result: {result.Ok}, Error: {result.ErrorMessage}, Shutdown: {result.ShutdownReason}");
 
-                if (result is not { Ok: true })
+                if (result.Ok)
                 {
-                    await Awaitable.WaitForSecondsAsync(RetryDelaySeconds);
+                    continue;
                 }
-            }
+
+                Destroy(runner);
+                await Awaitable.WaitForSecondsAsync(RetryDelaySeconds);
+            } while (!result.Ok);
         }
 
-        private async Task RunHostOrServerMode(GameMode gameMode)
+        private async Awaitable RunHostOrServerMode(GameMode gameMode)
         {
             var startGameArgs = new StartGameArgs { GameMode = gameMode, SessionName = TestSessionName };
             var runner = Instantiate(networkRunnerPrefab);
-            await runner.StartGame(startGameArgs);
-            await runner.LoadScene("Level Scene");
+
+            var result = await runner.StartGame(startGameArgs);
+            if (!result.Ok)
+            {
+                Debug.LogError($"Failed to start {gameMode}: {result.ErrorMessage}");
+                Destroy(runner);
+                Application.Quit();
+                return;
+            }
+
+            await runner.LoadScene(LevelSceneName);
         }
     }
 }
