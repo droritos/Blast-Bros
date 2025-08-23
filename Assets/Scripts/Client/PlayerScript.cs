@@ -9,7 +9,10 @@ namespace Game.Client
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerScript : NetworkBehaviour
     {
+        #region << Inventory Handling >>
+        public static PlayerScript LocalPlayer { get; private set; } // 🔹 This is the key line
         public PlayerInventory Inventory { get; private set; }
+        #endregion
 
         [SerializeField] private PlayerInput playerInput;
         [SerializeField] private Animator animator;
@@ -23,13 +26,15 @@ namespace Game.Client
 
         public override void Spawned()
         {
-            base.Spawned();
-            Inventory = new PlayerInventory();
+            if (Object.HasInputAuthority)
+            {
+                LocalPlayer = this;
+            }
 
-            //Inventory.OnBombUseFailed += ShowNoBombFeedback; // Subscribe to bomb use failure feedback - GUI or sound feedback
+            var inventoriesManager = FindAnyObjectByType<PlayerInventoriesManager>(); // Applied Once
+            Inventory = new PlayerInventory(inventoriesManager);
         }
-
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         private void OnValidate()
         {
             if (!animator)
@@ -87,14 +92,9 @@ namespace Game.Client
             {
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
                 {
-                    if(!Inventory.TryUseBomb()) return; // If no bombs available, exit early
-
-                    GameManagerRequestBroker.RequestBomb(transform.position); // Player always get a bomb so why "RequestBomb"
-
+                    RequestUseBomb(transform.position); // Ask the server to spawn and handle inventory
                     animator.SetInteger(AnimatorParams.State, (int)PlayerState.PlacingBomb);
-
                 }
-
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
                 {
                     _isSprinting = true;
@@ -106,6 +106,13 @@ namespace Game.Client
             }
 
             _prevButtons = input.buttons;
+        }
+        public void RequestUseBomb(Vector3 position)
+        {
+            if (Runner.IsServer)
+                return; // Server doesn't ask itself
+
+            Inventory.InventoriesManager.RequestUseBombRPC(position);
         }
     }
 }

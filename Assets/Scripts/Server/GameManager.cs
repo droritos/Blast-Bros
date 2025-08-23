@@ -14,7 +14,7 @@ namespace Game.Server
         private void OnDisable() => GameManagerRequestBroker.OnRequestBomb -= RequestBombAtLocationRPC;
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        private void RequestBombAtLocationRPC(Vector3 position)
+        private void RequestBombAtLocationRPC(PlayerRef playerRef,Vector3 position)
         {
             Debug.Log("[Server] Placing bomb in location");
             position = gridData.AlignToClosestGridPosition(position);

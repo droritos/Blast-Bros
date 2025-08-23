@@ -8,6 +8,8 @@ namespace Game.Client
         public event UnityAction OnBombCountChanged;
         public event UnityAction OnBombUseFailed;
 
+        public PlayerInventoriesManager InventoriesManager { get; private set; }
+
         public int TotalBombs { get; private set; } = 1; // Default to 1 bomb
 
         private int _currentBombCount; // _currentBombCount/TotalBombs - GUI
@@ -26,9 +28,10 @@ namespace Game.Client
             }
         }
 
-        public PlayerInventory()
+        public PlayerInventory(PlayerInventoriesManager inventoriesManager)
         {
             UpdateInventory();
+            InventoriesManager = inventoriesManager;
         }
 
         public void UpdateInventory()
@@ -59,5 +62,17 @@ namespace Game.Client
                 return false; // No bombs available to use
             }
         }
+
+        #region << Called From Server >>
+        public void SetCurrentBombCount(int value)
+        {
+            CurrentBombCount = value;
+        }
+
+        public void NotifyUseFailed() 
+        {
+            OnBombUseFailed?.Invoke();
+        }
+        #endregion
     }
 }
