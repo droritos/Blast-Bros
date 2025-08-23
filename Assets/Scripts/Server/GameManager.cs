@@ -35,12 +35,12 @@ namespace Game.Server
             position = gridData.AlignToClosestGridPosition(position);
             var bombInstance = Runner.Spawn(gameData.bombPrefab, position);
 
-            StartCoroutine(BombExplosionCoroutine(position, bombInstance));
+            StartCoroutine(DoExplosion(position, bombInstance));
         }
 
-        private IEnumerator BombExplosionCoroutine(Vector3 bombPosition, NetworkObject bombInstance)
+        IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance)
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(gameData.explosionEffectSettings.duration + gameData.explosionEffectSettings.explosionDuration + 0.1f);
 
             // 4-way raycasts to adjacent destructible blocks
             HitAndDestroyCrate(bombPosition, Vector3.forward);
@@ -48,20 +48,19 @@ namespace Game.Server
             HitAndDestroyCrate(bombPosition, Vector3.left);
             HitAndDestroyCrate(bombPosition, Vector3.right);
 
-            yield return new WaitForSeconds(2f);
-
             Runner.Despawn(bombInstance);
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)
         {
             Physics.Linecast(origin, origin + direction * 2f, out RaycastHit hit);
-            if (!hit.collider || !hit.collider.CompareTag("Destructible"))
-            {
-                return;
-            }
+            if (!hit.collider) return;
 
-            Runner.Despawn(hit.collider.gameObject.GetComponent<NetworkObject>());
+            var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
+            if (hit.collider.CompareTag("Destructible"))
+            {
+                Runner.Despawn(networkObject);
+            }
         }
     }
 }
