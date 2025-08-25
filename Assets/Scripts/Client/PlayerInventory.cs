@@ -71,6 +71,7 @@ namespace Game.Client
 
         public void NotifyUseFailed() 
         {
+            Debug.Log($"Cantt Use Bomb - {this.CurrentBombCount}");
             OnBombUseFailed?.Invoke();
         }
         #endregion

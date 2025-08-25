@@ -1,7 +1,8 @@
 using Fusion;
-using Game.Server;
 using Game.Data;
+using Game.Server;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Game.Client
 {
@@ -92,7 +93,7 @@ namespace Game.Client
             {
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
                 {
-                    RequestUseBomb(transform.position); // Ask the server to spawn and handle inventory
+                    Inventory.InventoriesManager.RequestUseBombRPC(transform.position); // Ask the server to spawn and handle inventory
                     animator.SetInteger(AnimatorParams.State, (int)PlayerState.PlacingBomb);
                 }
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
@@ -106,13 +107,6 @@ namespace Game.Client
             }
 
             _prevButtons = input.buttons;
-        }
-        public void RequestUseBomb(Vector3 position)
-        {
-            if (Runner.IsServer)
-                return; // Server doesn't ask itself
-
-            Inventory.InventoriesManager.RequestUseBombRPC(position);
         }
     }
 }

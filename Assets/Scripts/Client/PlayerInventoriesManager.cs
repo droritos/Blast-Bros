@@ -11,6 +11,7 @@ public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayer
     public void PlayerJoined(PlayerRef player)
     {
         _playerBombCounts[player] = 1; // Start with 1 bomb
+        UpdateBombCountClientRPC(player, _playerBombCounts[player]);
     }
 
     public void PlayerLeft(PlayerRef player)
