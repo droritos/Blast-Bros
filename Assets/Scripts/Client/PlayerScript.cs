@@ -89,7 +89,7 @@ namespace Game.Client
                 animator.SetFloat(AnimatorParams.Speed, speedPercent);
             }
 
-            if (Object.HasStateAuthority)
+            if (Object.HasInputAuthority)
             {
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
                 {

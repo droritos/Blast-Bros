@@ -1,12 +1,22 @@
 using Fusion;
-using System.Collections.Generic;
-using UnityEngine;
 using Game.Client;
 using Game.Server;
+using System.Collections.Generic;
+using UnityEngine;
+using static PlasticGui.WorkspaceWindow.Merge.MergeInProgress;
 
 public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
 {
     private readonly Dictionary<PlayerRef, int> _playerBombCounts = new();
+
+    private void OnEnable()
+    {
+        GameManagerRequestBroker.OnRestoreBomb += RestoreBomb;
+    }
+    private void OnDisable()
+    {
+        GameManagerRequestBroker.OnRestoreBomb -= RestoreBomb;
+    }
 
     public void PlayerJoined(PlayerRef player)
     {
@@ -22,6 +32,7 @@ public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayer
     [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
     public void RequestUseBombRPC(Vector3 position, RpcInfo info = default)
     {
+        Debug.Log($"[SERVER] Bomb request from: {info.Source}");
         if (_playerBombCounts.TryGetValue(info.Source, out int count) && count > 0)
         {
             _playerBombCounts[info.Source]--;
@@ -39,6 +50,7 @@ public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayer
     {
         if (player == Runner.LocalPlayer)
         {
+            Debug.Log($"[Client] Bomb update to: {PlayerScript.LocalPlayer?.Inventory.CurrentBombCount}");
             PlayerScript.LocalPlayer?.Inventory?.SetCurrentBombCount(bombCount);
         }
     }
@@ -48,10 +60,10 @@ public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayer
     {
         if (player == Runner.LocalPlayer)
         {
+            Debug.Log($"No More Bombs ! Boom1!!!");
             PlayerScript.LocalPlayer?.Inventory?.NotifyUseFailed();
         }
     }
-
     public void RestoreBomb(PlayerRef player)
     {
         if (_playerBombCounts.ContainsKey(player))

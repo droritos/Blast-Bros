@@ -27,16 +27,11 @@ public class BombVfx : VfxController
     [Header("Explode Positions")]
     [SerializeField] private List<Transform> _explodePositions;
 
-
-#if UNITY_EDITOR // Test in Editor
     protected override void OnEnable()
     {
         base.OnEnable();
-        TestPlay();
+        Play(0.5f - 0.1f);
     }
-#endif
-    [ContextMenu("Test Play (3s)")]
-    private void TestPlay() => Play(3f);
 
     /// <summary>
     /// Generates explosion effects at the given world positions.

@@ -8,10 +8,15 @@ namespace Game.Server
     {
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
+        private void OnEnable()
+        {
+            GameManagerRequestBroker.OnRequestBomb += RequestBombAtLocationRPC;
+        }
 
-        private void OnEnable() => GameManagerRequestBroker.OnRequestBomb += RequestBombAtLocationRPC;
-
-        private void OnDisable() => GameManagerRequestBroker.OnRequestBomb -= RequestBombAtLocationRPC;
+        private void OnDisable()
+        {
+            GameManagerRequestBroker.OnRequestBomb -= RequestBombAtLocationRPC;
+        }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         private void RequestBombAtLocationRPC(PlayerRef playerRef,Vector3 position)
@@ -20,10 +25,10 @@ namespace Game.Server
             position = gridData.AlignToClosestGridPosition(position);
             NetworkObject bombInstance = Runner.Spawn(gameData.bombPrefab, position);
 
-            StartCoroutine(BombExplosionCoroutine(position, bombInstance));
+            StartCoroutine(BombExplosionCoroutine(playerRef, position, bombInstance));
         }
 
-        private IEnumerator BombExplosionCoroutine(Vector3 bombPosition, NetworkObject bombInstance)
+        private IEnumerator BombExplosionCoroutine(PlayerRef playerRef,Vector3 bombPosition, NetworkObject bombInstance)
         {
             yield return new WaitForSeconds(0.5f);
 
@@ -38,6 +43,7 @@ namespace Game.Server
             Runner.Despawn(bombInstance);
 
             // Invoke RestoreBombCount to the user's inventory
+            GameManagerRequestBroker.RequestRestoreBomb(playerRef);
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)
