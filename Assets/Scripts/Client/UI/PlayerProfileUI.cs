@@ -1,47 +1,43 @@
 using System;
-using System.Collections.Generic;
+using Fusion;
 using Game.Server;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
-using Game.Client;
 
 namespace Game
-{ 
-    public class PlayerProfileUI : MonoBehaviour
+{
+    public class PlayerProfileUI : NetworkBehaviour
     {
-        [SerializeField] private PlayerInventoriesManager _manager;
-
-        [SerializeField] private TextMeshProUGUI _name; 
-        [SerializeField] private TextMeshProUGUI _currentBombText;
+        [SerializeField] private TextMeshProUGUI playerNameTMP;
+        [SerializeField] private TextMeshProUGUI currentBombStatusTMP;
         [SerializeField] private Image characterIcon;
 
-        private void OnEnable()
+        public override void Spawned()
         {
-            //_localPlayer.OnBombReqeust += UpdateBomb;
-            InizilizeProfile("Me", null);
+            GameManager.instance.playerInventoriesManager.OnBombCountUpdated += OnBombCountUpdated;
+            GameManager.instance.playerInventoriesManager.OnBombUseFailed += OnBombUseFailed;
+
+            InitializeProfile("Me", null);
         }
 
-        public void InizilizeProfile(string name, Sprite icon)
+        public override void Despawned(NetworkRunner runner, bool hasState)
         {
-            _name.SetText(name);
+            GameManager.instance.playerInventoriesManager.OnBombCountUpdated -= OnBombCountUpdated;
+            GameManager.instance.playerInventoriesManager.OnBombUseFailed -= OnBombUseFailed;
+        }
+
+        private void OnBombUseFailed() => Debug.Log("FAILED!!!!");
+
+        private void OnBombCountUpdated(int currentBombs, int totalBombs) => UpdateBombStatus(currentBombs, totalBombs);
+
+        private void InitializeProfile(string playerName, Sprite icon)
+        {
+            playerNameTMP.SetText(playerName);
             characterIcon.sprite = icon;
-            UpdateBombText(1,1);
+            UpdateBombStatus(1,1);
         }
 
-        private void UpdateBombText(string newAmount)
-        {
-            _currentBombText.SetText(newAmount);
-        }
-        private void UpdateBombText(int currentBombs, int totalBombs)
-        {
-            _currentBombText.SetText(currentBombs.ToString() + "/" + totalBombs.ToString());
-        }
-
-        private void UpdateBomb()
-        {
-            UpdateBombText(_manager.LocalPlayerCurrentBombCount, _manager.LocalPlayerMaxBombCount);
-        }
+        private void UpdateBombStatus(int currentBombs, int totalBombs) => currentBombStatusTMP.SetText($"{currentBombs}/{totalBombs}");
     }
 }

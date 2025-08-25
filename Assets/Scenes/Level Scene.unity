@@ -756,7 +756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
-  _playerInventoriesManager: {fileID: 0}
+  playerInventoriesManager: {fileID: 1023042521}
 --- !u!114 &1023042521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1554,6 +1554,7 @@ GameObject:
   - component: {fileID: 2032491938}
   - component: {fileID: 2032491937}
   - component: {fileID: 2032491939}
+  - component: {fileID: 2032491940}
   m_Layer: 5
   m_Name: 'Profile '
   m_TagString: Untagged
@@ -1634,11 +1635,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ec0cb67bede089418f76632046cde37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _manager: {fileID: 1023042521}
-  _localPlayer: {fileID: 0}
-  _name: {fileID: 0}
-  _currentBombText: {fileID: 0}
-  characterIcon: {fileID: 0}
+  playerNameTMP: {fileID: 414106510}
+  currentBombStatusTMP: {fileID: 1790288215}
+  characterIcon: {fileID: 604214625}
+--- !u!114 &2032491940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032491935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  SortKey: 2025280769
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2032491939}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &922340692779805611
 PrefabInstance:
   m_ObjectHideFlags: 0

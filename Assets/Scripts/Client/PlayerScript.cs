@@ -27,7 +27,7 @@ namespace Game.Client
 
         private const float SpeedMultiplier = 1.5f;
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private void OnValidate()
         {
             if (!animator)

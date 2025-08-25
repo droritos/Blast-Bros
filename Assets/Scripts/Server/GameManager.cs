@@ -9,9 +9,7 @@ namespace Game.Server
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
 
-
-        [SerializeField] private PlayerInventoriesManager _playerInventoriesManager;
-
+        public PlayerInventoriesManager playerInventoriesManager;
         public static GameManager instance;
 
         private void Awake()
@@ -33,9 +31,11 @@ namespace Game.Server
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RequestBombAtLocationRPC(Vector3 position, RpcInfo info = default)
         {
-            bool isRequstSucceed = _playerInventoriesManager.TryConsumePlayerBombRPC(info);
-            if (!isRequstSucceed)
+            bool didConsumeBomb = playerInventoriesManager.TryConsumePlayerBombRPC(info);
+            if (!didConsumeBomb)
+            {
                 return;
+            }
 
             Debug.Log("[Server] Placing bomb in location");
             position = gridData.AlignToClosestGridPosition(position);
@@ -55,9 +55,7 @@ namespace Game.Server
             HitAndDestroyCrate(bombPosition, Vector3.right);
 
             Runner.Despawn(bombInstance);
-            _playerInventoriesManager.RestoreBomb(playerRef);
-            // Invoke RestoreBombCount to the user's inventory
-            //RequestRestoreBomb(playerRef);
+            playerInventoriesManager.RestoreBomb(playerRef);
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)

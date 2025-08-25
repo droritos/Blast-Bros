@@ -1,75 +1,82 @@
+using System;
 using Fusion;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Server
 {
+    public class PlayerInventory
+    {
+        public int currentBombs = 1;
+        public int maxBombs = 1;
+    }
+
     public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
-        private readonly Dictionary<PlayerRef, int> _playerBombCounts = new();
+        private readonly Dictionary<PlayerRef, PlayerInventory> _playerBombCounts = new();
 
-        public int LocalPlayerCurrentBombCount { get; private set; }
-        public int LocalPlayerMaxBombCount { get; private set; }
+        public event Action<int, int> OnBombCountUpdated;
+        public event Action OnBombUseFailed;
 
         public void PlayerJoined(PlayerRef player)
         {
-            _playerBombCounts[player] = 1; // Start with 1 bomb
-            UpdateBombCountClientRPC(player, _playerBombCounts[player]);
+            _playerBombCounts[player] = new PlayerInventory(); // Every player starts with one bomb
+            UpdateBombCountClient(player);
         }
 
-        public void PlayerLeft(PlayerRef player)
-        {
-            _playerBombCounts.Remove(player);
-        }
-        public bool TryConsumePlayerBombRPC(RpcInfo info = default)
+        public void PlayerLeft(PlayerRef player) => _playerBombCounts.Remove(player);
+
+        #region Bomb Management
+        internal bool TryConsumePlayerBombRPC(RpcInfo info = default)
         {
             Debug.Log($"[SERVER] Bomb request from: {info.Source}");
-            if (_playerBombCounts.TryGetValue(info.Source, out int count) && count > 0) // Handle 
+            if (_playerBombCounts.TryGetValue(info.Source, out var inventory) && inventory.currentBombs > 0) // Handle
             {
-                _playerBombCounts[info.Source]--;
-                UpdateBombCountClientRPC(info.Source, _playerBombCounts[info.Source]);
+                _playerBombCounts[info.Source].currentBombs--;
+                UpdateBombCountClient(info.Source);
 
                 return true;
             }
-            else
-            {
-                NotifyBombUseFailedRPC(info.Source);
-                return true;
-            }
+
+            NotifyBombUseFailedRPC(info.Source);
+            return false;
         }
-        public void RestoreBomb(PlayerRef player) // Also Update Just UI?
+
+        internal void RestoreBomb(PlayerRef player)
         {
-            if (_playerBombCounts.ContainsKey(player))
+            if (_playerBombCounts.TryGetValue(player, out var playerInventory))
             {
-                _playerBombCounts[player]++;
-                UpdateBombCountClientRPC(player, _playerBombCounts[player]);
+                playerInventory.currentBombs++;
+                UpdateBombCountClient(player);
             }
         }
 
-        public void RequestLocalPlayerData(out int currentBomb, out int maxBomb)
+        internal void IncreaseBombCapacity(PlayerRef player)
         {
-            currentBomb = LocalPlayerCurrentBombCount;
-            maxBomb = LocalPlayerMaxBombCount;
-        }
-        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void UpdateBombCountClientRPC([RpcTarget] PlayerRef player, int bombCount) // Also Update Just UI?
-        {
-            if (player == Runner.LocalPlayer)
+            if (_playerBombCounts.TryGetValue(player, out var playerInventory))
             {
-                Debug.Log($"[Client] Bomb update to: {bombCount}");
-                LocalPlayerCurrentBombCount = bombCount;
-                //PlayerScript.LocalPlayer?.Inventory?.SetCurrentBombCount(bombCount);
+                playerInventory.maxBombs++;
+                UpdateBombCountClient(player);
             }
+        }
+        #endregion
+
+        private void UpdateBombCountClient(PlayerRef source) => UpdateBombCountClientRPC(source, _playerBombCounts[source].currentBombs, _playerBombCounts[source].maxBombs);
+
+        #region Outbound RPCs
+        [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
+        private void UpdateBombCountClientRPC([RpcTarget] PlayerRef player, int bombCount, int maxBombs)
+        {
+            Debug.Log($"[Server] Bombs for player {player} update to: {bombCount}");
+            OnBombCountUpdated?.Invoke(bombCount, 1); // TODO: max == 1;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void NotifyBombUseFailedRPC([RpcTarget] PlayerRef player) // Update Only UI?
+        private void NotifyBombUseFailedRPC([RpcTarget] PlayerRef player)
         {
-            if (player == Runner.LocalPlayer)
-            {
-                Debug.Log($"No More Bombs ! No Boom!!!!");
-                //PlayerScript.LocalPlayer?.Inventory?.NotifyUseFailed();
-            }
+            Debug.Log($"No More Bombs ! No Boom!!!!");
+            OnBombUseFailed?.Invoke();
         }
+        #endregion
     }
 }

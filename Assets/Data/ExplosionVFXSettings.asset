@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a388846a2fd40dd80aabcd4fe6d93f0, type: 3}
   m_Name: ExplosionVFXSettings
   m_EditorClassIdentifier: 
-  duration: 5
+  duration: 1.5
+  explosionDuration: 0.2
   wiggleAngle: 10
   wiggleStep: 0.2
   shrinkScale: 0.8
