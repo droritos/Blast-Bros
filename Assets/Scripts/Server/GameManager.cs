@@ -1,4 +1,3 @@
-﻿using System;
 using System.Collections;
 using Fusion;
 using UnityEngine;
@@ -9,10 +8,9 @@ namespace Game.Server
     {
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
-        private void OnEnable()
-        {
-            GameManagerRequestBroker.OnRequestBomb += RequestBombAtLocationRPC;
-        }
+
+
+        [SerializeField] private PlayerInventoriesManager _playerInventoriesManager;
 
         public static GameManager instance;
 
@@ -33,18 +31,22 @@ namespace Game.Server
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        public void RequestBombAtLocationRPC(Vector3 position)
+        public void RequestBombAtLocationRPC(Vector3 position, RpcInfo info = default)
         {
+            bool isRequstSucceed = _playerInventoriesManager.TryConsumePlayerBombRPC(info);
+            if (!isRequstSucceed)
+                return;
+
             Debug.Log("[Server] Placing bomb in location");
             position = gridData.AlignToClosestGridPosition(position);
             NetworkObject bombInstance = Runner.Spawn(gameData.bombPrefab, position);
 
-            StartCoroutine(DoExplosion(position, bombInstance));
+            StartCoroutine(DoExplosion(position, bombInstance, info.Source));
         }
 
-        IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance)
+        IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance, PlayerRef playerRef)
         {
-            yield return new WaitForSeconds(gameData.explosionEffectSettings.duration + gameData.explosionEffectSettings.explosionDuration + 0.1f);
+            yield return new WaitForSeconds(gameData.explosionEffectSettings.TotalDuration + 0.1f);
 
             // 4-way raycasts to adjacent destructible blocks
             HitAndDestroyCrate(bombPosition, Vector3.forward);
@@ -53,9 +55,9 @@ namespace Game.Server
             HitAndDestroyCrate(bombPosition, Vector3.right);
 
             Runner.Despawn(bombInstance);
-
+            _playerInventoriesManager.RestoreBomb(playerRef);
             // Invoke RestoreBombCount to the user's inventory
-            GameManagerRequestBroker.RequestRestoreBomb(playerRef);
+            //RequestRestoreBomb(playerRef);
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)

@@ -1,6 +1,7 @@
 using Fusion;
 using Game.Data;
 using Game.Server;
+using System;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -11,8 +12,9 @@ namespace Game.Client
     public class PlayerScript : NetworkBehaviour
     {
         #region << Inventory Handling >>
-        public static PlayerScript LocalPlayer { get; private set; } // 🔹 This is the key line
-        public PlayerInventory Inventory { get; private set; }
+        public event Action OnBombReqeust;
+        [SerializeField] private PlayerProfileUI _playerProfileUI;
+        //public PlayerInventory Inventory { get; private set; }
         #endregion
 
         [SerializeField] private PlayerInput playerInput;
@@ -25,16 +27,6 @@ namespace Game.Client
 
         private const float SpeedMultiplier = 1.5f;
 
-        public override void Spawned()
-        {
-            if (Object.HasInputAuthority)
-            {
-                LocalPlayer = this;
-            }
-
-            var inventoriesManager = FindAnyObjectByType<PlayerInventoriesManager>(); // Applied Once
-            Inventory = new PlayerInventory(inventoriesManager);
-        }
         #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -93,10 +85,10 @@ namespace Game.Client
             {
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
                 {
-                    //Inventory.InventoriesManager.RequestUseBombRPC(transform.position); // Ask the server to spawn and handle inventory
                     GameManager.instance.RequestBombAtLocationRPC(transform.position);
 
                     animator.SetInteger(AnimatorParams.State, (int)PlayerState.PlacingBomb);
+                    OnBombReqeust?.Invoke();
                 }
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
                 {

@@ -8,7 +8,7 @@ namespace Game.Client
         public event UnityAction OnBombCountChanged;
         public event UnityAction OnBombUseFailed;
 
-        public PlayerInventoriesManager InventoriesManager { get; private set; }
+        //public PlayerInventoriesManager InventoriesManager { get; private set; }
 
         public int TotalBombs { get; private set; } = 1; // Default to 1 bomb
 
@@ -28,10 +28,10 @@ namespace Game.Client
             }
         }
 
-        public PlayerInventory(PlayerInventoriesManager inventoriesManager)
+        public PlayerInventory()
         {
             UpdateInventory();
-            InventoriesManager = inventoriesManager;
+            //InventoriesManager = inventoriesManager;
         }
 
         public void UpdateInventory()
