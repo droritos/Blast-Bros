@@ -1,5 +1,6 @@
 using System.Linq;
 using Fusion;
+using Game.Data;
 using Unity.Multiplayer.Playmode;
 using UnityEngine;
 
@@ -11,75 +12,41 @@ namespace Game
         private const float RetryDelaySeconds = 1f;
         private const string LevelSceneName = "Level Scene";
 
-        [SerializeField] private NetworkRunner networkRunnerPrefab;
+        [SerializeField] private GameSessionConfig sessionConfig;
 
         private async void Start()
         {
+#if UNITY_EDITOR
             var gameMode = GetGameMode();
             Debug.Log($"Configuration for player: {gameMode}");
 
             if (gameMode == GameMode.Client)
             {
-                await RunClientMode();
+                await Game.Client.ClientSessionUtils.Connect(sessionConfig);
+            }
+            else if (gameMode == GameMode.Server)
+            {
+                await Game.Server.HostSessionUtils.StartServer(sessionConfig);
             }
             else
             {
-                await RunHostOrServerMode(gameMode);
+                await Game.Server.HostSessionUtils.StartHost(sessionConfig);
             }
+#elif UNITY_SERVER
+            await Game.Server.HostSessionUtils.StartServer(sessionConfig);
+#else
+            await Game.Client.ClientSessionUtils.Connect(sessionConfig);
+#endif
         }
 
+#if UNITY_EDITOR
         private static GameMode GetGameMode()
         {
-#if UNITY_EDITOR
             var tags = CurrentPlayer.ReadOnlyTags().ToHashSet();
             return tags.Contains("Server") ? GameMode.Server :
                 tags.Contains("Host") ? GameMode.Host :
                 GameMode.Client;
-#elif UNITY_SERVER
-            return GameMode.Server;
-#else
-            return GameMode.Client;
+        }
 #endif
-        }
-
-        private async Awaitable RunClientMode()
-        {
-            var startGameArgs = new StartGameArgs { GameMode = GameMode.Client, SessionName = TestSessionName };
-            StartGameResult result;
-
-            do
-            {
-                var runner = Instantiate(networkRunnerPrefab);
-
-                Debug.Log("Attempting connection...");
-                result = await runner.StartGame(startGameArgs);
-                Debug.Log($"Result: {result.Ok}, Error: {result.ErrorMessage}, Shutdown: {result.ShutdownReason}");
-
-                if (result.Ok)
-                {
-                    continue;
-                }
-
-                Destroy(runner);
-                await Awaitable.WaitForSecondsAsync(RetryDelaySeconds);
-            } while (!result.Ok);
-        }
-
-        private async Awaitable RunHostOrServerMode(GameMode gameMode)
-        {
-            var startGameArgs = new StartGameArgs { GameMode = gameMode, SessionName = TestSessionName };
-            var runner = Instantiate(networkRunnerPrefab);
-
-            var result = await runner.StartGame(startGameArgs);
-            if (!result.Ok)
-            {
-                Debug.LogError($"Failed to start {gameMode}: {result.ErrorMessage}");
-                Destroy(runner);
-                Application.Quit();
-                return;
-            }
-
-            await runner.LoadScene(LevelSceneName);
-        }
     }
 }

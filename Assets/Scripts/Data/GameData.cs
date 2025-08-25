@@ -1,14 +1,16 @@
-﻿using UnityEngine;
+﻿using Game.Data;
+using UnityEngine;
 
 namespace Game
 {
     [CreateAssetMenu(fileName = "GameData.asset", menuName = "Game/GameData")]
     public class GameData : ScriptableObject
     {
-        public CharacterData[] characters;
         public ExplosionEffectSettings explosionEffectSettings;
+        public GameSessionConfig gameSessionConfig;
 
         [Header("Prefabs")]
+        public CharacterData[] characters;
         public GameObject bombPrefab;
     }
 }
