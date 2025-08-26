@@ -128,7 +128,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 49799390}
-  - component: {fileID: 49799391}
   m_Layer: 0
   m_Name: Grid
   m_TagString: Untagged
@@ -151,21 +150,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &49799391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 49799389}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ed6e234812ee4aa2a547f986da23efa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
-  breakableBlockPrefab: {fileID: 5769655989495610822, guid: 3d3b6685b97b6a8468d1966da41f6dc3, type: 3}
-  gridTransform: {fileID: 49799390}
 --- !u!1 &145087075
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,6 +698,7 @@ GameObject:
   - component: {fileID: 1023042519}
   - component: {fileID: 1023042520}
   - component: {fileID: 1023042521}
+  - component: {fileID: 1023042522}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -771,6 +756,7 @@ MonoBehaviour:
   - {fileID: 1023042519}
   - {fileID: 1023042520}
   - {fileID: 1023042521}
+  - {fileID: 1023042522}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1023042519
 MonoBehaviour:
@@ -804,7 +790,7 @@ MonoBehaviour:
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
   playerInventoriesManager: {fileID: 1023042521}
-  gridGenerator: {fileID: 49799391}
+  gridManager: {fileID: 1023042522}
 --- !u!114 &1023042521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -817,6 +803,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 425eb0e28e42f8549a34e180857b944d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1023042522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023042515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed6e234812ee4aa2a547f986da23efa8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
+  breakableBlockPrefab: {fileID: 5769655989495610822, guid: 3d3b6685b97b6a8468d1966da41f6dc3, type: 3}
+  gridTransform: {fileID: 49799390}
 --- !u!224 &1332079204 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7203782342059547768, guid: 8e013fa2b79c70a47b68c44e565f5558, type: 3}

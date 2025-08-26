@@ -67,14 +67,14 @@ namespace Game.Server
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void UpdateBombCountClientRPC([RpcTarget] PlayerRef player, int bombCount, int maxBombs)
         {
-            Debug.Log($"[Server] Bombs for player {player} update to: {bombCount}");
+            Debug.Log($"[Client] Bombs for player {player} update to: {bombCount}");
             OnBombCountUpdated?.Invoke(bombCount, 1); // TODO: max == 1;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void NotifyBombUseFailedRPC([RpcTarget] PlayerRef player)
         {
-            Debug.Log($"No More Bombs ! No Boom!!!!");
+            Debug.Log("[Client] No More Bombs ! No Boom!!!!");
             OnBombUseFailed?.Invoke();
         }
         #endregion

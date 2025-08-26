@@ -10,7 +10,7 @@ namespace Game.Server
         [SerializeField] private GridData gridData;
 
         [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
-        [SerializeField] private GridGenerator gridGenerator;
+        [SerializeField] private GridManager gridManager;
 
         public static GameManager instance;
 
@@ -28,11 +28,6 @@ namespace Game.Server
             {
                 instance = null;
             }
-        }
-
-        public override void Spawned()
-        {
-            if (HasStateAuthority) { gridGenerator.GenerateGrid(); }
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
@@ -70,10 +65,9 @@ namespace Game.Server
             Physics.Linecast(origin, origin + direction * 2f, out RaycastHit hit);
             if (!hit.collider) return;
 
-            var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
             if (hit.collider.CompareTag("Destructible"))
             {
-                Runner.Despawn(networkObject);
+                gridManager.DespawnGridItem(hit.collider.transform.position);
             }
         }
     }
