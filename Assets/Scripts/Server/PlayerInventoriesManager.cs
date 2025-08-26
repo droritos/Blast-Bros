@@ -53,9 +53,11 @@ namespace Game.Server
 
         internal void IncreaseBombCapacity(PlayerRef player)
         {
+            Debug.Log($"[SERVER] Bomb Increase For: {player}");
             if (_playerBombCounts.TryGetValue(player, out var playerInventory))
             {
                 playerInventory.maxBombs++;
+                playerInventory.currentBombs++;
                 UpdateBombCountClient(player);
             }
         }
@@ -68,7 +70,7 @@ namespace Game.Server
         private void UpdateBombCountClientRPC([RpcTarget] PlayerRef player, int bombCount, int maxBombs)
         {
             Debug.Log($"[Server] Bombs for player {player} update to: {bombCount}");
-            OnBombCountUpdated?.Invoke(bombCount, 1); // TODO: max == 1;
+            OnBombCountUpdated?.Invoke(bombCount, maxBombs);
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]

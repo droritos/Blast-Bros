@@ -1,5 +1,6 @@
 using System.Collections;
 using Fusion;
+using Server;
 using UnityEngine;
 
 namespace Game.Server
@@ -10,6 +11,7 @@ namespace Game.Server
         [SerializeField] private GridData gridData;
 
         public PlayerInventoriesManager playerInventoriesManager;
+        public PickUpManager  pickUpManager;
         public static GameManager instance;
 
         private void Awake()
@@ -18,6 +20,8 @@ namespace Game.Server
             {
                 instance = this;
             }
+
+            pickUpManager.OnPickUpCollected += playerInventoriesManager.IncreaseBombCapacity;
         }
 
         public void OnDestroy()
@@ -26,6 +30,8 @@ namespace Game.Server
             {
                 instance = null;
             }
+
+            pickUpManager.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
@@ -56,6 +62,8 @@ namespace Game.Server
 
             Runner.Despawn(bombInstance);
             playerInventoriesManager.RestoreBomb(playerRef);
+
+            pickUpManager.CreatePickUp(bombPosition);  // Try Spawn a PickUp
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)
