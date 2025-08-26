@@ -1,10 +1,9 @@
-using Fusion;
 using UnityEngine;
 
 namespace Game
 {
     [ExecuteInEditMode]
-    public class BlastZoneGrid : MonoBehaviour
+    public class GridBaseGenerator : MonoBehaviour
     {
         [Header("Grid Blocks")] //
         [SerializeField] private GameObject solidBlockPrefab;
@@ -17,7 +16,6 @@ namespace Game
         [SerializeField] private Transform gridCollidersTransform;
         [SerializeField] private Transform spawnPositionsTransform;
         [SerializeField] private Transform gridBaseTransform;
-        [SerializeField] private Transform gridTransform;
 
         // ReSharper disable once UnusedMember.Global
         public void GenerateGridBase()
@@ -41,7 +39,7 @@ namespace Game
 
                     // create spawn zone markers and skip blocks
                     pos += upOffset;
-                    if (IsSpawnZone(x, z))
+                    if (gridData.IsSpawnZone(x, z))
                     {
                         var positionMarker = new GameObject("Spawn Marker")
                         {
@@ -54,11 +52,11 @@ namespace Game
                     }
 
                     // create block
-                    if (IsBorder(x, z))
+                    if (gridData.IsBorder(x, z))
                     {
                         InstantiatePrefabInstance(borderBlockPrefab, pos, Quaternion.identity, gridBaseTransform);
                     }
-                    else if (IsSolidBlock(x, z))
+                    else if (gridData.IsSolidBlock(x, z))
                     {
                         InstantiatePrefabInstance(solidBlockPrefab, pos, Quaternion.identity, gridBaseTransform);
                     }
@@ -70,12 +68,12 @@ namespace Game
 
         private void SpawnColliders()
         {
-            int paddedWidth = gridData.width + 1;
-            int paddedHeight = gridData.height + 1;
+            int paddedWidth = gridData.width + 2;
+            int paddedHeight = gridData.height + 2;
             float spacing = gridData.spacing;
 
-            float gridRightBorderX = paddedWidth + 1 - 0.5f * 2;
-            float gridTopBorderZ = paddedHeight + 1 - 0.5f * 2;
+            float gridRightBorderX = paddedWidth - 0.5f * spacing;
+            float gridTopBorderZ = paddedHeight - 0.5f * spacing;
             var verticalColliderSize = new Vector3(spacing, spacing, paddedHeight * spacing);
             var horizontalColliderSize = new Vector3(paddedWidth * spacing, spacing, spacing);
 
@@ -84,7 +82,7 @@ namespace Game
                 new Vector3((gridData.width + spacing) * spacing, spacing, (gridData.height + spacing) * spacing));
 
             // spawn floor collider
-            SpawnCollider("Left", gridData.startPosition + new Vector3(gridRightBorderX, gridData.blockYOffset, 0),
+            SpawnCollider("Left", gridData.startPosition + new Vector3(-gridRightBorderX, gridData.blockYOffset, 0),
                 verticalColliderSize);
             SpawnCollider("Right", gridData.startPosition + new Vector3(gridRightBorderX, gridData.blockYOffset, 0),
                 verticalColliderSize);
@@ -123,39 +121,6 @@ namespace Game
             }
         }
 
-        // ReSharper disable once UnusedMember.Global
-        public void GenerateGridContents()
-        {
-            ClearGridContents();
-
-            // precalc some values
-            float xOffset = (gridData.width - 1) * gridData.spacing * 0.5f;
-            float zOffset = (gridData.height - 1) * gridData.spacing * 0.5f;
-            for (int x = 0; x < gridData.width; x++)
-            {
-                for (int z = 0; z < gridData.height; z++)
-                {
-                    if (IsSpawnZone(x, z)) continue;
-                    if (IsBreakableBlock(x, z))
-                    {
-                        var pos = gridData.startPosition + new Vector3(x * gridData.spacing - xOffset,
-                            gridData.blockYOffset, z * gridData.spacing - zOffset);
-                        var block = InstantiatePrefabInstance(breakableBlockPrefab, pos, Quaternion.identity,
-                            gridTransform);
-                        block.AddComponent<NetworkObject>();
-                    }
-                }
-            }
-        }
-
-        public void ClearGridContents()
-        {
-            for (int i = gridTransform.childCount - 1; i >= 0; i--)
-            {
-                DestroyImmediate(gridTransform.GetChild(i).gameObject);
-            }
-        }
-
         private GameObject InstantiatePrefabInstance(GameObject original, Vector3 position, Quaternion rotation,
             Transform parent)
         {
@@ -176,28 +141,5 @@ namespace Game
 
         // ReSharper disable once UnusedMember.Global
         public void SetCurrentPositionToStartPosition() => gridData.startPosition = transform.position;
-
-        private bool IsBorder(int x, int z) => x == -1 || x == gridData.width || z == -1 || z == gridData.height;
-
-        private bool IsSpawnZone(int x, int z) =>
-            (x == 0 && z == 0) ||
-            (x == gridData.width - 1 && z == gridData.height - 1) ||
-            (x == 0 && z == gridData.height - 1) ||
-            (x == gridData.width - 1 && z == 0);
-
-        private bool IsAdjacentToSpawnZone(int x, int z) =>
-            // Adjacent to top-left corner (0,0)
-            (x <= 1 && z <= 1 && !(x == 0 && z == 0)) ||
-            // Adjacent to bottom-right corner (width-1, height-1)
-            (x >= gridData.width - 2 && z >= gridData.height - 2 && !(x == gridData.width - 1 && z == gridData.height - 1)) ||
-            // Adjacent to bottom-left corner (0, height-1)
-            (x <= 1 && z >= gridData.height - 2 && !(x == 0 && z == gridData.height - 1)) ||
-            // Adjacent to top-right corner (width-1, 0)
-            (x >= gridData.width - 2 && z <= 1 && !(x == gridData.width - 1 && z == 0));
-
-        private bool IsBreakableBlock(int x, int z) =>
-            !IsAdjacentToSpawnZone(x, z) && !IsSolidBlock(x, z) && !IsBorder(x, z) && Random.value < 0.7;
-
-        private bool IsSolidBlock(int x, int z) => x % 2 == 1 && z % 2 == 1;
     }
 }

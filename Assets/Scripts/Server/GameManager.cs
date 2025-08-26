@@ -9,7 +9,9 @@ namespace Game.Server
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
 
-        public PlayerInventoriesManager playerInventoriesManager;
+        [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
+        [SerializeField] private GridGenerator gridGenerator;
+
         public static GameManager instance;
 
         private void Awake()
@@ -26,6 +28,11 @@ namespace Game.Server
             {
                 instance = null;
             }
+        }
+
+        public override void Spawned()
+        {
+            if (HasStateAuthority) { gridGenerator.GenerateGrid(); }
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

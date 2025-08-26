@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 514b21f08fb6434fa998980a2216c876, type: 3}
   m_Name: GridData
   m_EditorClassIdentifier: 
-  startPosition: {x: 0, y: -15.5, z: 3.5}
+  startPosition: {x: 0, y: 0, z: 0}
   width: 17
   height: 11
   spacing: 2

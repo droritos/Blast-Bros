@@ -53,5 +53,15 @@ namespace Game
 
             return GridPositionToWorldPosition(x, z);
         }
+
+        public bool IsBorder(int x, int z) => x == -1 || x == width || z == -1 || z == height;
+
+        public bool IsSpawnZone(int x, int z) =>
+            (x == 0 && z == 0) ||
+            (x == width - 1 && z == height - 1) ||
+            (x == 0 && z == height - 1) ||
+            (x == width - 1 && z == 0);
+
+        public bool IsSolidBlock(int x, int z) => x % 2 == 1 && z % 2 == 1;
     }
 }
