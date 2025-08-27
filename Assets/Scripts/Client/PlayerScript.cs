@@ -81,7 +81,7 @@ namespace Game.Client
                 animator.SetFloat(AnimatorParams.Speed, speedPercent);
 
                 animator.SetInteger(AnimatorParams.State, (int)PlayerState.Movement);
-            }   
+            }
 
             if (Object.HasInputAuthority)
             {

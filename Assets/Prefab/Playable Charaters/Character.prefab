@@ -216,9 +216,9 @@ MonoBehaviour:
   Animator: {fileID: 3201499429238811240}
   ApplyTiming: 2
   SyncSettings: 79
-  StateHashes: 0000000013a2de07d1d01fa5f5620a77c6d12f40a1609f62d8aa0cc42afa8626a8b5caa334c163f2077246c52b1a167c44563d8ba8f6ef9205b3f631238331799a56be64e2464665809f03c0
+  StateHashes: 0000000013a2de07d1d01fa5f5620a77c6d12f40a1609f62d8aa0cc42afa8626a8b5caa334c163f2077246c52b1a167c44563d8ba8f6ef9205b3f631238331799a56be64e2464665809f03c0098b730c1dc13329bf7b74d6
   TriggerHashes: 00000000
-  TotalWords: 3
+  TotalWords: 4
 --- !u!114 &227520099655188734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -260,6 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4d33af96e6f4545a41dea737882f595, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerProfileUI: {fileID: 0}
   playerInput: {fileID: 8892321198141543731}
   animator: {fileID: 3201499429238811240}
   capsuleCollider: {fileID: 3865689441722091541}
