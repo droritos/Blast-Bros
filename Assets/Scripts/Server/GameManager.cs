@@ -62,8 +62,6 @@ namespace Game.Server
 
             Runner.Despawn(bombInstance);
             playerInventoriesManager.RestoreBomb(playerRef);
-
-            pickUpManager.CreatePickUp(bombPosition);  // Try Spawn a PickUp
         }
 
         private void HitAndDestroyCrate(Vector3 origin, Vector3 direction)
@@ -74,6 +72,7 @@ namespace Game.Server
             var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
             if (hit.collider.CompareTag("Destructible"))
             {
+                pickUpManager.CreatePickUp(origin);  // Try Spawn a PickUp
                 Runner.Despawn(networkObject);
             }
         }
