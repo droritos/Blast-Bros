@@ -27,6 +27,8 @@ namespace Game
             _inverseSpacing = 1f / spacing;
         }
 
+        public int GetLinearCoordinates(int x, int z) => z * width + x;
+
         public Vector3 GridPositionToWorldPosition(int x, int z) =>
             new(
                 startPosition.x + x * spacing - _cachedXOffset,

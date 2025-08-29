@@ -11,12 +11,13 @@ namespace Game.Server
         [SerializeField] private GameObject breakableBlockPrefab;
         [SerializeField] private Transform gridTransform;
 
+        private bool _hadRenderedGrid;
         private BitmapGrid _grid;
         private GameObject[] _generatedBlocks;
 
         public override void Spawned()
         {
-            if(Runner.IsServer)
+            if (Runner.IsServer)
             {
                 GenerateGrid();
                 ForceRenderGrid();
@@ -26,6 +27,7 @@ namespace Game.Server
         public void PlayerJoined(PlayerRef player) => SendGridInformationRPC(player, _grid.GetBitmap());
 
         #region Grid Generation
+
         // ReSharper disable once UnusedMember.Global
         private void GenerateGrid()
         {
@@ -45,14 +47,17 @@ namespace Game.Server
             // Adjacent to top-left corner (0,0)
             (x <= 1 && z <= 1 && !(x == 0 && z == 0)) ||
             // Adjacent to bottom-right corner (width-1, height-1)
-            (x >= gridData.width - 2 && z >= gridData.height - 2 && !(x == gridData.width - 1 && z == gridData.height - 1)) ||
+            (x >= gridData.width - 2 && z >= gridData.height - 2 &&
+             !(x == gridData.width - 1 && z == gridData.height - 1)) ||
             // Adjacent to bottom-left corner (0, height-1)
             (x <= 1 && z >= gridData.height - 2 && !(x == 0 && z == gridData.height - 1)) ||
             // Adjacent to top-right corner (width-1, 0)
             (x >= gridData.width - 2 && z <= 1 && !(x == gridData.width - 1 && z == 0));
 
         private bool IsBreakableBlock(int x, int z) =>
-            !IsAdjacentToSpawnZone(x, z) && !gridData.IsSolidBlock(x, z) && !gridData.IsBorder(x, z) && Random.value < 0.7;
+            !IsAdjacentToSpawnZone(x, z) && !gridData.IsSolidBlock(x, z) && !gridData.IsBorder(x, z) &&
+            Random.value < 0.7;
+
         #endregion
 
         internal void DespawnGridItem(in Vector3 position)
@@ -64,9 +69,10 @@ namespace Game.Server
                 return;
             }
 
-            _grid.RemoveObject(x,z);
+            _grid.RemoveObject(x, z);
             RemoveRenderedGridItemRPC(x, z);
         }
+
         private void ForceRenderGrid() => ForceRenderGridRPC(_grid.GetBitmap());
 
         #region Outbound RPCs
@@ -75,11 +81,19 @@ namespace Game.Server
         private void ForceRenderGridRPC(uint[] bitmapGridData) => RenderGrid(bitmapGridData);
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void SendGridInformationRPC([RpcTarget] PlayerRef player, uint[] bitmapGridData) => RenderGrid(bitmapGridData);
+        private void SendGridInformationRPC([RpcTarget] PlayerRef player, uint[] bitmapGridData) =>
+            RenderGrid(bitmapGridData);
 
         private void RenderGrid(uint[] bitmapGridData)
         {
-            Debug.Log($"Rendering grid with: {bitmapGridData.Length}, {bitmapGridData[0]}, {bitmapGridData[1]}, {bitmapGridData[2]}");
+            if (_hadRenderedGrid)
+            {
+                Debug.Log("Grid already rendered, skipped");
+                return;
+            }
+
+            Debug.Log(
+                $"Rendering grid with: {bitmapGridData.Length}, {bitmapGridData[0]}, {bitmapGridData[1]}, {bitmapGridData[2]}");
 
             var bitmapGrid = new BitmapGrid(gridData.width, gridData.height, bitmapGridData);
             _generatedBlocks = new GameObject[gridData.width * gridData.height];
@@ -99,16 +113,19 @@ namespace Game.Server
                         gridData.blockYOffset, z * gridData.spacing - zOffset);
                     var go = Instantiate(breakableBlockPrefab, pos, Quaternion.identity, gridTransform);
 
-                    _generatedBlocks[z * gridData.width + x] = go;
+                    _generatedBlocks[gridData.GetLinearCoordinates(x, z)] = go;
                 }
             }
+
+            _hadRenderedGrid = true;
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void RemoveRenderedGridItemRPC(int x, int z)
         {
-            Destroy(_generatedBlocks[z * gridData.width + x]);
-            _generatedBlocks[z * gridData.width + x] = null;
+            int linearCoordinates = gridData.GetLinearCoordinates(x, z);
+            Destroy(_generatedBlocks[linearCoordinates]);
+            _generatedBlocks[linearCoordinates] = null;
         }
 
         #endregion
