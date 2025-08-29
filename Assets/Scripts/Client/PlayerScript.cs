@@ -87,7 +87,7 @@ namespace Game.Client
                 {
                     GameManager.instance.RequestBombAtLocationRPC(transform.position);
 
-                    animator.SetInteger(AnimatorParams.State, (int)PlayerState.PlacingBomb);
+                    animator.SetTrigger(AnimationTriggers.PlaceBomb);
                     OnBombReqeust?.Invoke();
                 }
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
