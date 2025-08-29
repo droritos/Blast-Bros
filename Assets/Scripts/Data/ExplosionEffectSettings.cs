@@ -11,6 +11,6 @@ namespace Game
         [SerializeField] public float shrinkScale = 0.8f, shrinkTime = 0.1f;
         [SerializeField] public float popScale = 1.5f, popTime = 0.2f;
 
-        [SerializeField] public float TotalDuration => duration + explosionDuration;
+        public float TotalDuration => duration + explosionDuration;
     }
 }

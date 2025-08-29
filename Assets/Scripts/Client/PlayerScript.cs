@@ -1,9 +1,7 @@
 using Fusion;
 using Game.Data;
 using Game.Server;
-using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Game.Client
 {
@@ -11,12 +9,6 @@ namespace Game.Client
     [RequireComponent(typeof(PlayerInput))]
     public class PlayerScript : NetworkBehaviour
     {
-        #region << Inventory Handling >>
-        public event Action OnBombReqeust;
-        [SerializeField] private PlayerProfileUI _playerProfileUI;
-        //public PlayerInventory Inventory { get; private set; }
-        #endregion
-
         [SerializeField] private PlayerInput playerInput;
         [SerializeField] private Animator animator;
         [SerializeField] private CapsuleCollider capsuleCollider;
@@ -88,7 +80,6 @@ namespace Game.Client
                     GameManager.instance.RequestBombAtLocationRPC(transform.position);
 
                     animator.SetTrigger(AnimationTriggers.PlaceBomb);
-                    OnBombReqeust?.Invoke();
                 }
                 if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
                 {

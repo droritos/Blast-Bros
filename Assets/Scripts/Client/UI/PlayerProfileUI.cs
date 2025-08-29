@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-namespace Game
+namespace Game.Client.UI
 {
     public class PlayerProfileUI : NetworkBehaviour
     {

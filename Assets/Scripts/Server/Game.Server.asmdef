@@ -1,6 +1,6 @@
 {
     "name": "Game.Server",
-    "rootNamespace": "",
+    "rootNamespace": "Game",
     "references": [
         "GUID:21a23c3abb7bc9146a339494a5653de3"
     ],
