@@ -7,15 +7,11 @@ namespace Game.Data
     [Serializable]
     public class GameSessionConfig
     {
-        [SerializeField] private string sessionName = "TestSession";
-        [SerializeField] [Range(0.1f, 10f)] private float retryDelaySeconds = 1f;
-        [SerializeField] private string levelSceneName = "Level Scene";
-        [SerializeField] [Range(1, 20)] private int maxRetryAttempts = 5;
-
-        public string SessionName => sessionName;
-        public float RetryDelaySeconds => retryDelaySeconds;
-        public string LevelSceneName => levelSceneName;
-        public int MaxRetryAttempts => maxRetryAttempts;
+        [SerializeField] public string SessionName = "TestSession";
+        [SerializeField] [Range(0.1f, 10f)] public float RetryDelaySeconds = 1f;
+        [SerializeField] public string LevelSceneName = "Level Scene";
+        [SerializeField] [Range(1, 20)] public int MaxRetryAttempts = 5;
+        [SerializeField] public int NumMaxPlayers = 4;
 
         public static GameSessionConfig GetCurrentSessionConfig(GameData gameData)
         {

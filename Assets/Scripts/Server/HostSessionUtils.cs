@@ -7,11 +7,11 @@ namespace Game.Server
 {
     public static class HostSessionUtils
     {
-        public static async Awaitable<bool> StartHost(GameSessionConfig config) => await CreateSession(GameMode.Host, config);
+        public static async Awaitable<bool> StartHost(GameSessionConfig config, string playerName = "") => await CreateSession(GameMode.Host, config, playerName);
 
-        public static async Awaitable<bool> StartServer(GameSessionConfig config) => await CreateSession(GameMode.Server, config);
+        public static async Awaitable<bool> StartServer(GameSessionConfig config, string playerName = "") => await CreateSession(GameMode.Server, config, playerName);
 
-        private static async Awaitable<bool> CreateSession(GameMode gameMode, GameSessionConfig config)
+        private static async Awaitable<bool> CreateSession(GameMode gameMode, GameSessionConfig config, string playerName = "")
         {
             var startGameArgs = new StartGameArgs
             {
@@ -43,7 +43,11 @@ namespace Game.Server
             }
 
             Debug.Log($"[{modeName}] Ready and running!");
-            GameManager.instance.RequestCreatePlayerObjectRPC($"{config.SessionName}{gameMode}");
+            if (string.IsNullOrEmpty(playerName))
+            {
+                playerName = $"{config.SessionName}{gameMode}";
+            }
+            GameManager.instance.RequestCreatePlayerObjectRPC(playerName);
             return true;
         }
 

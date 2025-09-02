@@ -1,14 +1,15 @@
-using System.IO;
 using System.Linq;
 using Game.Data;
 using Unity.Multiplayer.Playmode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Game
 {
     public class GameSessionStarter : MonoBehaviour
     {
         [SerializeField] private GameData gameData;
+        [SerializeField] private bool shouldRedirectToMenu;
 
         private async void Start()
         {
@@ -45,6 +46,16 @@ namespace Game
 
         private async Awaitable StartDedicatedServer(GameSessionConfig sessionConfig) => await Server.HostSessionUtils.StartServer(sessionConfig);
 
-        private async Awaitable StartClientSession(GameSessionConfig sessionConfig) => await Client.ClientSessionUtils.Connect(sessionConfig);
+        private async Awaitable StartClientSession(GameSessionConfig sessionConfig)
+        {
+            if(shouldRedirectToMenu)
+            {
+                SceneManager.LoadScene("Main Menu");
+            }
+            else
+            {
+                await Client.ClientSessionUtils.Connect(sessionConfig);
+            }
+        }
     }
 }

@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
+  shouldRedirectToMenu: 1
 --- !u!4 &515295766
 Transform:
   m_ObjectHideFlags: 0
