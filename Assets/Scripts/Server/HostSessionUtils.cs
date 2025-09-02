@@ -1,6 +1,7 @@
 ﻿using Fusion;
 using Game.Data;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Game.Server
 {
@@ -42,6 +43,7 @@ namespace Game.Server
             }
 
             Debug.Log($"[{modeName}] Ready and running!");
+            GameManager.instance.RequestCreatePlayerObjectRPC($"{config.SessionName}{gameMode}");
             return true;
         }
 

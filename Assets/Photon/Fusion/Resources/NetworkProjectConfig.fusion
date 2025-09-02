@@ -65,6 +65,7 @@
         "Assembly-CSharp-firstpass",
         "Fusion.Addons.Physics",
         "Fusion.Addons.FSM",
+        "Game.Data",
         "Game.Client",
         "Game.Server"
     ],

@@ -1,12 +1,13 @@
 ﻿using Fusion;
 using Game.Data;
+using Game.Server;
 using UnityEngine;
 
 namespace Game.Client
 {
     public static class ClientSessionUtils
     {
-        public static async Awaitable<bool> Connect(GameSessionConfig config)
+        public static async Awaitable<bool> Connect(GameSessionConfig config, string playerName="Unknown")
         {
             int attempts = 0;
             NetworkRunner runner = null;
@@ -36,7 +37,7 @@ namespace Game.Client
 
                 if (result.Ok)
                 {
-                    Debug.Log("[CLIENT] Successfully connected to session!");
+                    await HandleSuccessfulConnection(runner, playerName);
                     return true;
                 }
 
@@ -52,6 +53,17 @@ namespace Game.Client
 
             Debug.LogError($"[CLIENT] Failed to connect after {config.MaxRetryAttempts} attempts");
             return false;
+        }
+
+        private static async Awaitable HandleSuccessfulConnection(NetworkRunner runner, string playerName)
+        {
+            Debug.Log("[CLIENT] Successfully connected to session!");
+            while (GameManager.instance == null)
+            {
+                await Awaitable.WaitForSecondsAsync(0.1f);
+            }
+
+            GameManager.instance.RequestCreatePlayerObjectRPC(name: playerName);
         }
 
         private static NetworkRunner CreateNetworkRunner(string name)

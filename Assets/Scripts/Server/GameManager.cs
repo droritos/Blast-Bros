@@ -79,5 +79,19 @@ namespace Game.Server
                 gridManager.DespawnGridItem(hitPosition);
             }
         }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        public void RequestCreatePlayerObjectRPC(string name = "Unknown", RpcInfo info = default)
+        {
+            var player = info.Source;
+            var sessionPrefab = Resources.Load<GameObject>("PlayerData");
+
+            var playerDataGameObject = Runner.Spawn(sessionPrefab, inputAuthority: player);
+            Runner.SetPlayerObject(player, playerDataGameObject);
+            Debug.Log($"[GLOBAL] Spawned {playerDataGameObject} for {player}");
+
+            var playerData = playerDataGameObject.GetComponent<PlayerData>();
+            playerData.UpdatePlayerName(name);
+        }
     }
 }

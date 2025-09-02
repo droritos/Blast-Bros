@@ -19,9 +19,10 @@ namespace Game.Server
             var position = positions[^1].position;
             positions.RemoveAt(positions.Count - 1);
 
-            NetworkObject playerObject = Runner.Spawn(prefab, position: position, inputAuthority: player);
-            Runner.SetPlayerObject(player, playerObject);
-
+            NetworkObject physicalGameObject = Runner.Spawn(prefab, position: position, inputAuthority: player);
+            var playerObject = Runner.GetPlayerObject(player);
+            var playerData = playerObject.GetComponent<PlayerData>();
+            playerData.UpdatePhysicalPlayerObject(physicalGameObject);
         }
 
         private void Awake()

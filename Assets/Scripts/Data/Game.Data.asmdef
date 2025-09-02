@@ -1,4 +1,14 @@
 {
-	"name": "Game.Data",
-  "rootNamespace": "Game"
+    "name": "Game.Data",
+    "rootNamespace": "Game",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": true,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
 }
