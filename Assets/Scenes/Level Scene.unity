@@ -699,6 +699,7 @@ GameObject:
   - component: {fileID: 1023042520}
   - component: {fileID: 1023042521}
   - component: {fileID: 1023042522}
+  - component: {fileID: 1023042523}
   m_Layer: 0
   m_Name: GameManagers
   m_TagString: Untagged
@@ -757,6 +758,7 @@ MonoBehaviour:
   - {fileID: 1023042520}
   - {fileID: 1023042521}
   - {fileID: 1023042522}
+  - {fileID: 1023042523}
   ForceRemoteRenderTimeframe: 0
 --- !u!114 &1023042519
 MonoBehaviour:
@@ -790,7 +792,7 @@ MonoBehaviour:
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
   playerInventoriesManager: {fileID: 1023042521}
-  gridManager: {fileID: 1023042522}
+  pickUpManager: {fileID: 1023042523}
 --- !u!114 &1023042521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -818,6 +820,21 @@ MonoBehaviour:
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
   breakableBlockPrefab: {fileID: 5769655989495610822, guid: 3d3b6685b97b6a8468d1966da41f6dc3, type: 3}
   gridTransform: {fileID: 49799390}
+--- !u!114 &1023042523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1023042515}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7633be8738ff5294482464d6861d2e94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _pickUpPrefab: {fileID: 2633643305878855939, guid: 008f1696b8274e4479cdf90ff45e105b, type: 3}
+  _chanceToCreate: 0.15
+  _pickupRadius: 1.5
 --- !u!224 &1332079204 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7203782342059547768, guid: 8e013fa2b79c70a47b68c44e565f5558, type: 3}

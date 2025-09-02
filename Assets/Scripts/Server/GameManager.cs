@@ -9,9 +9,8 @@ namespace Game.Server
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
 
-        [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
-        [SerializeField] private GridManager gridManager;
-
+        public PlayerInventoriesManager playerInventoriesManager;
+        public PickUpManager  pickUpManager;
         public static GameManager instance;
 
         private void Awake()
@@ -20,6 +19,8 @@ namespace Game.Server
             {
                 instance = this;
             }
+
+            pickUpManager.OnPickUpCollected += playerInventoriesManager.IncreaseBombCapacity;
         }
 
         public void OnDestroy()
@@ -28,6 +29,8 @@ namespace Game.Server
             {
                 instance = null;
             }
+
+            pickUpManager.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
@@ -65,9 +68,11 @@ namespace Game.Server
             Physics.Linecast(origin, origin + direction * 2f, out RaycastHit hit);
             if (!hit.collider) return;
 
+            var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
             if (hit.collider.CompareTag("Destructible"))
             {
-                gridManager.DespawnGridItem(hit.collider.transform.position);
+                pickUpManager.CreatePickUp(origin);  // Try Spawn a PickUp
+                Runner.Despawn(networkObject);
             }
         }
     }
