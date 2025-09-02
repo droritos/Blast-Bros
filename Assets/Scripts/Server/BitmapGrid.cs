@@ -1,10 +1,17 @@
 ﻿using System;
-using UnityEngine;
 
 namespace Game.Server
 {
-    // Non-networked version for local operations and backwards compatibility
-    internal class BitmapGrid
+    internal interface IBitmapGrid<T>
+    {
+        public T[] GetBitmap();
+        public bool HasObject(int x, int z);
+        public void AddObject(int x, int z);
+        public void RemoveObject(int x, int z);
+        public void Clear();
+    }
+
+    internal class BitmapGrid : IBitmapGrid<uint>
     {
         private readonly int width;
         private readonly int height;
@@ -29,9 +36,6 @@ namespace Game.Server
             this.bitmap = bitmap;
         }
 
-        /// <summary>
-        /// Converts 2D coordinates to a linear bit index
-        /// </summary>
         private int GetBitIndex(int x, int z)
         {
             if (x < 0 || x >= width || z < 0 || z >= height)
@@ -41,16 +45,12 @@ namespace Game.Server
             return z * width + x;
         }
 
-        /// <summary>
-        /// Gets the array index and bit position for a given coordinate
-        /// </summary>
         private void GetArrayIndexAndBitPosition(int x, int z, out int arrayIndex, out int bitPosition)
         {
             int bitIndex = GetBitIndex(x, z);
             arrayIndex = bitIndex / bitsPerElement;
             bitPosition = bitIndex % bitsPerElement;
         }
-
         public uint[] GetBitmap() => bitmap;
 
         public bool HasObject(int x, int z)
