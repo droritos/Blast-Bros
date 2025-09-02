@@ -42,9 +42,9 @@ namespace Game
             }
         }
 #endif
-        private async Awaitable StartHostModeSession(GameSessionConfig sessionConfig) => await Server.HostSessionUtils.StartHost(sessionConfig);
+        private async Awaitable StartHostModeSession(GameSessionConfig sessionConfig) => await Server.ServerSessionUtils.StartHost(sessionConfig);
 
-        private async Awaitable StartDedicatedServer(GameSessionConfig sessionConfig) => await Server.HostSessionUtils.StartServer(sessionConfig);
+        private async Awaitable StartDedicatedServer(GameSessionConfig sessionConfig) => await Server.ServerSessionUtils.StartServer(sessionConfig);
 
         private async Awaitable StartClientSession(GameSessionConfig sessionConfig)
         {

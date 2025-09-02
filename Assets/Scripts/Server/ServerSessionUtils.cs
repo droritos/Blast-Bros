@@ -5,7 +5,7 @@ using Object = UnityEngine.Object;
 
 namespace Game.Server
 {
-    public static class HostSessionUtils
+    public static class ServerSessionUtils
     {
         public static async Awaitable<bool> StartHost(GameSessionConfig config, string playerName = "") => await CreateSession(GameMode.Host, config, playerName);
 
@@ -16,7 +16,8 @@ namespace Game.Server
             var startGameArgs = new StartGameArgs
             {
                 GameMode = gameMode,
-                SessionName = config.sessionName
+                SessionName = config.sessionName,
+                PlayerCount = config.numMaxPlayers
             };
 
             var runner = CreateNetworkRunner($"Network {gameMode}");
