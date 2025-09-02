@@ -49,6 +49,14 @@ namespace Game.Client
                 return;
             }
 
+            HandleMovement(input);
+            HandleButtonInput(input);
+
+            _prevButtons = input.buttons;
+        }
+
+        private void HandleMovement(PlayerInputState input)
+        {
             var actualMove = new Vector3(input.move.x, 0f, input.move.y);
             var deltaMove = actualMove * (speed * Runner.DeltaTime);
 
@@ -72,26 +80,29 @@ namespace Game.Client
 
                 animator.SetFloat(AnimatorParams.Speed, speedPercent);
             }
+        }
 
-            if (Object.HasInputAuthority)
+        private void HandleButtonInput(PlayerInputState input)
+        {
+            if (!Object.HasInputAuthority)
             {
-                if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
-                {
-                    GameManager.instance.RequestBombAtLocationRPC(transform.position);
-
-                    animator.SetTrigger(AnimationTriggers.PlaceBomb);
-                }
-                if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
-                {
-                    _isSprinting = true;
-                }
-                else if (input.buttons.WasReleased(_prevButtons, PlayerInputButtons.SprintButton))
-                {
-                    _isSprinting = false;
-                }
+                return;
             }
 
-            _prevButtons = input.buttons;
+            if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.PlaceBombButton))
+            {
+                GameManager.instance.RequestBombAtLocationRPC(transform.position);
+
+                animator.SetTrigger(AnimationTriggers.PlaceBomb);
+            }
+            if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
+            {
+                _isSprinting = true;
+            }
+            else if (input.buttons.WasReleased(_prevButtons, PlayerInputButtons.SprintButton))
+            {
+                _isSprinting = false;
+            }
         }
     }
 }

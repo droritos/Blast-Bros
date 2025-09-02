@@ -10,8 +10,10 @@ namespace Game.Server
         [SerializeField] private GameData gameData;
         [SerializeField] private GridData gridData;
 
-        public PlayerInventoriesManager playerInventoriesManager;
-        [FormerlySerializedAs("pickUpManager")] public PickupSpawner  pickupSpawner;
+        [Header("Manager references")] //
+        [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
+        [SerializeField] private GridManager gridManager;
+        [SerializeField] private PickupSpawner pickupSpawner;
 
         public static GameManager instance;
 
@@ -51,7 +53,7 @@ namespace Game.Server
             StartCoroutine(DoExplosion(position, bombInstance, info.Source));
         }
 
-        IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance, PlayerRef playerRef)
+        private IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance, PlayerRef playerRef)
         {
             yield return new WaitForSeconds(gameData.explosionEffectSettings.TotalDuration + 0.1f);
 
@@ -70,11 +72,10 @@ namespace Game.Server
             Physics.Linecast(origin, origin + direction * 2f, out RaycastHit hit);
             if (!hit.collider) return;
 
-            var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
             if (hit.collider.CompareTag("Destructible"))
             {
                 pickupSpawner.TrySpawnPickup(origin);  // Try Spawn a PickUp
-                Runner.Despawn(networkObject);
+                gridManager.DespawnGridItem(hit.collider.transform.position);
             }
         }
     }

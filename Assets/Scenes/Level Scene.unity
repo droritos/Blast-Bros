@@ -791,6 +791,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
+  gridManager: {fileID: 1023042522}
   playerInventoriesManager: {fileID: 1023042521}
   pickupSpawner: {fileID: 1023042523}
 --- !u!114 &1023042521
