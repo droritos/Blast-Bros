@@ -1,5 +1,5 @@
+using System.IO;
 using System.Linq;
-using Fusion;
 using Game.Data;
 using Unity.Multiplayer.Playmode;
 using UnityEngine;
@@ -8,45 +8,43 @@ namespace Game
 {
     public class GameSessionStarter : MonoBehaviour
     {
-        private const string TestSessionName = "TestSession";
-        private const float RetryDelaySeconds = 1f;
-        private const string LevelSceneName = "Level Scene";
-
-        [SerializeField] private GameSessionConfig sessionConfig;
+        [SerializeField] private GameData gameData;
 
         private async void Start()
         {
+            var sessionConfig = GameSessionConfig.GetCurrentSessionConfig(gameData);
 #if UNITY_EDITOR
-            var gameMode = GetGameMode();
-            Debug.Log($"Configuration for player: {gameMode}");
+            await StartEditorSession(sessionConfig);
+#elif UNITY_SERVER
+            await StartDedicatedServer(sessionConfig);
+#else
+            await StartClientSession(sessionConfig);
+#endif
+        }
 
-            if (gameMode == GameMode.Client)
+#if UNITY_EDITOR
+        private async Awaitable StartEditorSession(GameSessionConfig sessionConfig)
+        {
+            var playerTags = CurrentPlayer.ReadOnlyTags().ToHashSet();
+
+            if (playerTags.Contains("Server"))
             {
-                await Game.Client.ClientSessionUtils.Connect(sessionConfig);
+                await StartDedicatedServer(sessionConfig);
             }
-            else if (gameMode == GameMode.Server)
+            else if (playerTags.Contains("Host"))
             {
-                await Game.Server.HostSessionUtils.StartServer(sessionConfig);
+                await StartHostModeSession(sessionConfig);
             }
             else
             {
-                await Game.Server.HostSessionUtils.StartHost(sessionConfig);
+                await StartClientSession(sessionConfig);
             }
-#elif UNITY_SERVER
-            await Game.Server.HostSessionUtils.StartServer(sessionConfig);
-#else
-            await Game.Client.ClientSessionUtils.Connect(sessionConfig);
-#endif
         }
+#endif
+        private async Awaitable StartHostModeSession(GameSessionConfig sessionConfig) => await Server.HostSessionUtils.StartHost(sessionConfig);
 
-#if UNITY_EDITOR
-        private static GameMode GetGameMode()
-        {
-            var tags = CurrentPlayer.ReadOnlyTags().ToHashSet();
-            return tags.Contains("Server") ? GameMode.Server :
-                tags.Contains("Host") ? GameMode.Host :
-                GameMode.Client;
-        }
-#endif
+        private async Awaitable StartDedicatedServer(GameSessionConfig sessionConfig) => await Server.HostSessionUtils.StartServer(sessionConfig);
+
+        private async Awaitable StartClientSession(GameSessionConfig sessionConfig) => await Client.ClientSessionUtils.Connect(sessionConfig);
     }
 }

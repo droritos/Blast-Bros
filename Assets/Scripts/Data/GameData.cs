@@ -7,7 +7,7 @@ namespace Game
     public class GameData : ScriptableObject
     {
         public ExplosionEffectSettings explosionEffectSettings;
-        public GameSessionConfig gameSessionConfig;
+        public GameSessionConfig defaultGameSessionConfig;
 
         [Header("Prefabs")]
         public CharacterData[] characters;

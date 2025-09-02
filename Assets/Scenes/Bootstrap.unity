@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffb2d23f98e40c5419f084ae04b484af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  networkRunnerPrefab: {fileID: 6294240584326159327, guid: 747082620f2f9fc4aa2edf1eb9342a98, type: 3}
+  gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
 --- !u!4 &515295766
 Transform:
   m_ObjectHideFlags: 0
