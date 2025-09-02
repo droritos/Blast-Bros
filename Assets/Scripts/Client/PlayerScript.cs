@@ -70,7 +70,7 @@ namespace Game.Client
                 deltaMove *= SpeedMultiplier;
             }
 
-            if (!Physics.SphereCast(transform.position, capsuleCollider.radius, actualMove.normalized, out RaycastHit hit, deltaMove.magnitude, LayerMask.GetMask("Default")))
+            if (!Physics.SphereCast(transform.position, capsuleCollider.radius, actualMove.normalized, out RaycastHit hit, deltaMove.magnitude, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
             {
                 transform.position += deltaMove;
 

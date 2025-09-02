@@ -74,8 +74,9 @@ namespace Game.Server
 
             if (hit.collider.CompareTag("Destructible"))
             {
-                pickupSpawner.TrySpawnPickup(origin);  // Try Spawn a PickUp
-                gridManager.DespawnGridItem(hit.collider.transform.position);
+                var hitPosition = hit.collider.transform.position;
+                pickupSpawner.TrySpawnPickup(hitPosition);
+                gridManager.DespawnGridItem(hitPosition);
             }
         }
     }
