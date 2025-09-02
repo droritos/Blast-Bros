@@ -792,7 +792,7 @@ MonoBehaviour:
   gameData: {fileID: 11400000, guid: 6abbf3a5f5830754b8413ee3d69bb4d3, type: 2}
   gridData: {fileID: 11400000, guid: 13134f82fe1c9864298bb941a1fb0c17, type: 2}
   playerInventoriesManager: {fileID: 1023042521}
-  pickUpManager: {fileID: 1023042523}
+  pickupSpawner: {fileID: 1023042523}
 --- !u!114 &1023042521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -832,9 +832,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7633be8738ff5294482464d6861d2e94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _pickUpPrefab: {fileID: 2633643305878855939, guid: 008f1696b8274e4479cdf90ff45e105b, type: 3}
-  _chanceToCreate: 0.15
-  _pickupRadius: 1.5
+  pickUpPrefab: {fileID: 2633643305878855939, guid: 008f1696b8274e4479cdf90ff45e105b, type: 3}
+  chanceToCreate: 0.15
+  pickupRadius: 1.5
 --- !u!224 &1332079204 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7203782342059547768, guid: 8e013fa2b79c70a47b68c44e565f5558, type: 3}

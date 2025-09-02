@@ -1,6 +1,7 @@
 using System.Collections;
 using Fusion;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Game.Server
 {
@@ -10,7 +11,8 @@ namespace Game.Server
         [SerializeField] private GridData gridData;
 
         public PlayerInventoriesManager playerInventoriesManager;
-        public PickUpManager  pickUpManager;
+        [FormerlySerializedAs("pickUpManager")] public PickupSpawner  pickupSpawner;
+
         public static GameManager instance;
 
         private void Awake()
@@ -20,7 +22,7 @@ namespace Game.Server
                 instance = this;
             }
 
-            pickUpManager.OnPickUpCollected += playerInventoriesManager.IncreaseBombCapacity;
+            pickupSpawner.OnPickUpCollected += playerInventoriesManager.IncreaseBombCapacity;
         }
 
         public void OnDestroy()
@@ -30,7 +32,7 @@ namespace Game.Server
                 instance = null;
             }
 
-            pickUpManager.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
+            pickupSpawner.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
@@ -71,7 +73,7 @@ namespace Game.Server
             var networkObject = hit.collider.gameObject.GetComponent<NetworkObject>();
             if (hit.collider.CompareTag("Destructible"))
             {
-                pickUpManager.CreatePickUp(origin);  // Try Spawn a PickUp
+                pickupSpawner.TrySpawnPickup(origin);  // Try Spawn a PickUp
                 Runner.Despawn(networkObject);
             }
         }
