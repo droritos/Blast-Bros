@@ -37,13 +37,13 @@ namespace Game.Server
             var ownedCharacter = _characterOwners.First(kvp => kvp.Value.Equals(player));
 
             _characterOwners.Remove(ownedCharacter.Key);
-            Debug.Log($"[Server] Player {player} freed character {ownedCharacter.Key}");
+            Debug.Log($"[SERVER] Player {player} freed character {ownedCharacter.Key}");
         }
 
         private void UpdateCharacterMarkStatus()
         {
             int[] occupied = _characterOwners.Keys.ToArray();
-            Debug.Log($"[Server] Broadcasting character status to all clients: {string.Join(",", occupied)}");
+            Debug.Log($"[SERVER] Broadcasting character status to all clients: {string.Join(",", occupied)}");
             BroadcastOccupiedCharactersRPC(occupied);
         }
         #endregion
@@ -52,7 +52,7 @@ namespace Game.Server
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RequestCharacterRPC(int characterIdx, RpcInfo info = default)
         {
-            Debug.Log($"[Server] Requested character \"{gameData.characters[characterIdx].name}\" ({characterIdx})");
+            Debug.Log($"[SERVER] Requested character \"{gameData.characters[characterIdx].name}\" ({characterIdx})");
             bool isCharacterAvailable = !_characterOwners.ContainsKey(characterIdx);
 
             if (isCharacterAvailable)
@@ -68,7 +68,7 @@ namespace Game.Server
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void MarkReadyRPC(RpcInfo info = default)
         {
-            Debug.Log($"[Server] Player {info.Source} marked themselves ready, spawn relevant prefab");
+            Debug.Log($"[SERVER] Player {info.Source} marked themselves ready, spawn relevant prefab");
 
             int characterIdx = _characterOwners.Reverse[info.Source];
             var prefab = gameData.characters[characterIdx].prefab;

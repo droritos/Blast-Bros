@@ -12,7 +12,7 @@ namespace Game.Server
         {
             if (positions.Count == 0)
             {
-                Debug.LogWarning("[Server] No positions available to Spawn Character");
+                Debug.LogWarning("[SERVER] No positions available to Spawn Character");
                 return;
             }
 

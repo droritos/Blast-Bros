@@ -33,7 +33,7 @@ namespace Game.Server
                         continue;
                     }
 
-                    Debug.Log($"[Server] Player {player} collected a pickup.");
+                    Debug.Log($"[SERVER] Player {player} collected a pickup.");
                     OnPickUpCollected?.Invoke(player);
                     Runner.Despawn(pickup);
                     return true; // Remove this pickup

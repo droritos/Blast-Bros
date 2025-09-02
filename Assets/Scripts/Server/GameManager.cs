@@ -46,7 +46,7 @@ namespace Game.Server
                 return;
             }
 
-            Debug.Log("[Server] Placing bomb in location");
+            Debug.Log("[SERVER] Placing bomb in location");
             position = gridData.AlignToClosestGridPosition(position);
             NetworkObject bombInstance = Runner.Spawn(gameData.bombPrefab, position);
 
