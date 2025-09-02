@@ -819,7 +819,7 @@ MonoBehaviour:
   startServerButton: {fileID: 1379587818}
   quitButton: {fileID: 1103823549}
   clientStartGameCanvas: {fileID: 7197050351705423374}
-  hostStartGameCanvas: {fileID: 0}
+  hostStartGameCanvas: {fileID: 4390262319256112016}
 --- !u!1 &1793749673
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,6 +1059,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0c187accda7022748943e28f69add9bd, type: 3}
+--- !u!225 &4390262319256112016 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 4152987311804913293, guid: 09ec9c6dc9e76e8438d190392119af63, type: 3}
+  m_PrefabInstance: {fileID: 7830253483573685185}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6018742422423825327
 PrefabInstance:
   m_ObjectHideFlags: 0
