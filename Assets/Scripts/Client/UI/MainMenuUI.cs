@@ -8,28 +8,41 @@ namespace Game.Client.UI
     public class MainMenuUI : MonoBehaviour
     {
         [SerializeField] private Button startGameButton;
-        [SerializeField] private Button hostGameButton;
+        [SerializeField] private Button startServerButton;
         [SerializeField] private Button quitButton;
+
+        [SerializeField] private CanvasGroup clientStartGameCanvas;
+        [SerializeField] private CanvasGroup hostStartGameCanvas;
 
         private void OnEnable()
         {
             startGameButton.onClick.AddListener(StartGame);
-            hostGameButton.onClick.AddListener(HostGame);
+            startServerButton.onClick.AddListener(HostGameServer);
             quitButton.onClick.AddListener(QuitGame);
         }
 
         private void OnDisable()
         {
             startGameButton.onClick.RemoveListener(StartGame);
-            hostGameButton.onClick.RemoveListener(HostGame);
+            startServerButton.onClick.RemoveListener(HostGameServer);
             quitButton.onClick.RemoveListener(QuitGame);
         }
 
         private void Start() => EventSystem.current.SetSelectedGameObject(startGameButton.gameObject);
 
-        private void StartGame() {}
+        private void StartGame()
+        {
+            clientStartGameCanvas.interactable = true;
+            clientStartGameCanvas.blocksRaycasts = true;
+            clientStartGameCanvas.alpha = 1;
+        }
 
-        private void HostGame() {}
+        private void HostGameServer()
+        {
+            hostStartGameCanvas.interactable = true;
+            hostStartGameCanvas.blocksRaycasts = true;
+            hostStartGameCanvas.alpha = 1;
+        }
 
         private void QuitGame()
         {
