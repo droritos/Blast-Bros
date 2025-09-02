@@ -16,13 +16,13 @@ namespace Game.Server
             var startGameArgs = new StartGameArgs
             {
                 GameMode = gameMode,
-                SessionName = config.SessionName
+                SessionName = config.sessionName
             };
 
             var runner = CreateNetworkRunner($"Network {gameMode}");
             string modeName = gameMode.ToString().ToUpper();
 
-            Debug.Log($"[{modeName}] Starting session '{config.SessionName}'...");
+            Debug.Log($"[{modeName}] Starting session '{config.sessionName}'...");
 
             var result = await runner.StartGame(startGameArgs);
             if (!result.Ok)
@@ -34,7 +34,7 @@ namespace Game.Server
 
             Debug.Log($"[{modeName}] Session started successfully");
 
-            bool sceneLoaded = await LoadGameScene(runner, config.LevelSceneName, gameMode);
+            bool sceneLoaded = await LoadGameScene(runner, config.levelSceneName, gameMode);
             if (!sceneLoaded)
             {
                 Debug.LogError($"[{modeName}] Failed to load scene");
@@ -45,7 +45,7 @@ namespace Game.Server
             Debug.Log($"[{modeName}] Ready and running!");
             if (string.IsNullOrEmpty(playerName))
             {
-                playerName = $"{config.SessionName}{gameMode}";
+                playerName = $"{config.sessionName}{gameMode}";
             }
             GameManager.instance.RequestCreatePlayerObjectRPC(playerName);
             return true;

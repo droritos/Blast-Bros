@@ -16,7 +16,7 @@ namespace Game.Client
             do
             {
                 attempts++;
-                Debug.Log($"[CLIENT] Connection attempt {attempts}/{config.MaxRetryAttempts}...");
+                Debug.Log($"[CLIENT] Connection attempt {attempts}/{config.maxRetryAttempts}...");
 
                 // Clean up previous runner if retry
                 if (runner != null)
@@ -29,7 +29,7 @@ namespace Game.Client
                 var startGameArgs = new StartGameArgs
                 {
                     GameMode = GameMode.Client,
-                    SessionName = config.SessionName
+                    SessionName = config.sessionName
                 };
 
                 result = await runner.StartGame(startGameArgs);
@@ -44,14 +44,14 @@ namespace Game.Client
                 Debug.LogWarning($"[CLIENT] Attempt {attempts} failed: {result.ErrorMessage}");
                 Object.Destroy(runner.gameObject);
 
-                if (attempts < config.MaxRetryAttempts)
+                if (attempts < config.maxRetryAttempts)
                 {
-                    await Awaitable.WaitForSecondsAsync(config.RetryDelaySeconds);
+                    await Awaitable.WaitForSecondsAsync(config.retryDelaySeconds);
                 }
 
-            } while (attempts < config.MaxRetryAttempts);
+            } while (attempts < config.maxRetryAttempts);
 
-            Debug.LogError($"[CLIENT] Failed to connect after {config.MaxRetryAttempts} attempts");
+            Debug.LogError($"[CLIENT] Failed to connect after {config.maxRetryAttempts} attempts");
             return false;
         }
 

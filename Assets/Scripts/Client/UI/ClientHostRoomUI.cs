@@ -33,7 +33,7 @@ namespace Client.UI
         {
             var sessionConfig = GameSessionConfig.GetCurrentSessionConfig(gameData);
             int numMaxPlayers = int.Parse(maxPlayersDropdown.options[maxPlayersDropdown.value].text.Replace(" Players", "").Replace(" Player", ""));
-            sessionConfig.NumMaxPlayers = numMaxPlayers;
+            sessionConfig.numMaxPlayers = numMaxPlayers;
             _ = HostSessionUtils.StartHost(sessionConfig, playerName.text);
         }
 
