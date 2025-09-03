@@ -58,8 +58,9 @@ namespace Game.Client
         private static async Awaitable HandleSuccessfulConnection(NetworkRunner runner, string playerName)
         {
             Debug.Log("[CLIENT] Successfully connected to session!");
-            while (GameManager.instance == null)
+            while (GameManager.instance?.Object?.IsValid != true)
             {
+                Debug.Log("[CLIENT] Waiting for GameManager NetworkObject to be ready...");
                 await Awaitable.WaitForSecondsAsync(0.1f);
             }
 
