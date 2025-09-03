@@ -11,7 +11,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd97da4a11264063903c3bb2da00f06d, type: 3}
   m_Name: GameData
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier:
+  explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
+  defaultGameSessionConfig:
+    sessionName: TestSession
+    retryDelaySeconds: 1
+    levelSceneName: Level Scene
+    maxRetryAttempts: 5
+    numMaxPlayers: 2
   characters:
   - name: Barbarian
     prefab: {fileID: 3576306475107324456, guid: 771ba9a56569eb143b955b1405ca311d, type: 3}
@@ -40,6 +47,4 @@ MonoBehaviour:
   - name: Skeleton Warrior
     prefab: {fileID: 3576306475107324456, guid: 37dbf818546048b4c9a44f965c159ef6, type: 3}
     characterIcon: {fileID: 21300000, guid: f66359a50982cf84cb7904d9dc6758bd, type: 3}
-  explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
-  gameSessionConfig: {fileID: 11400000, guid: c0c36d8d2151dfa4c99ad8b032978c87, type: 2}
   bombPrefab: {fileID: 3564519651396155867, guid: 840432ba816e2f9448292e6a82c81911, type: 3}
