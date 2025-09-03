@@ -82,6 +82,21 @@ namespace Game.Server
                 pickupSpawner.TrySpawnPickup(hitPosition);
                 gridManager.DespawnGridItem(hitPosition);
             }
+            else if (hit.collider.CompareTag("Player"))
+            {
+                HandlePlayerDeath(hit.collider.gameObject);
+            }
+        }
+
+        private void HandlePlayerDeath(GameObject colliderGameObject)
+        {
+            var playerNetworkObject = colliderGameObject.transform.parent.gameObject.GetComponent<NetworkObject>();
+            var playerData = playerNetworkObject.GetComponent<PlayerData>();
+
+            Debug.Log($"[SERVER] Player {playerNetworkObject.InputAuthority} ({playerData.PlayerName}) had died");
+            Runner.Despawn(playerNetworkObject);
+
+            // TODO
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
