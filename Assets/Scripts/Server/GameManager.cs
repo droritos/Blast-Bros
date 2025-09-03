@@ -12,7 +12,7 @@ namespace Game.Server
 
         [Header("Manager references")] //
         [SerializeField] private PlayerReadyManager playerReadyManager;
-        [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
+        [SerializeField] private PlayerInventoriesManager playerInventoriesManager;
         [SerializeField] private GridManager gridManager;
         [SerializeField] private PickupSpawner pickupSpawner;
         [SerializeField] private GameCharacterSpawner characterSpawner;

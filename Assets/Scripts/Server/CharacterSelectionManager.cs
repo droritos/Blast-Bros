@@ -75,6 +75,9 @@ namespace Game.Server
             var prefab = gameData.characters[characterIdx].prefab;
             spawner.RequestCharacterSpawnAtReady(prefab, info.Source);
 
+            var playerData = Runner.GetPlayerObject(info.Source).GetComponent<PlayerData>();
+            playerData.UpdateCharacterIndex(characterIdx);
+
             playerReadyManager.MarkPlayerReady(info.Source);
         }
         #endregion
