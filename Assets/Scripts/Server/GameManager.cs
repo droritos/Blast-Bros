@@ -11,9 +11,11 @@ namespace Game.Server
         [SerializeField] private GridData gridData;
 
         [Header("Manager references")] //
+        [SerializeField] private PlayerReadyManager playerReadyManager;
         [SerializeField] public PlayerInventoriesManager playerInventoriesManager;
         [SerializeField] private GridManager gridManager;
         [SerializeField] private PickupSpawner pickupSpawner;
+        [SerializeField] private GameCharacterSpawner characterSpawner;
 
         public static GameManager instance;
 
@@ -25,6 +27,7 @@ namespace Game.Server
             }
 
             pickupSpawner.OnPickUpCollected += playerInventoriesManager.IncreaseBombCapacity;
+            playerReadyManager.OnAllPlayersReady += characterSpawner.SpawnAllCharacters;
         }
 
         public void OnDestroy()
@@ -35,6 +38,7 @@ namespace Game.Server
             }
 
             pickupSpawner.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
+            playerReadyManager.OnAllPlayersReady -= characterSpawner.SpawnAllCharacters;
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

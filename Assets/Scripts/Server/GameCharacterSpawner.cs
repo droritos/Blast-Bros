@@ -7,15 +7,30 @@ namespace Game.Server
     public class GameCharacterSpawner : NetworkBehaviour
     {
         [SerializeField] private List<Transform> positions = new();
+        private readonly List<(GameObject, PlayerRef)> _characterRequests = new();
 
-        internal void SpawnCharacter(GameObject prefab, PlayerRef player)
+        internal void RequestCharacterSpawnAtReady(GameObject prefab, PlayerRef player)
         {
-            if (positions.Count == 0)
+            if (positions.Count == _characterRequests.Count)
             {
                 Debug.LogWarning("[SERVER] No positions available to Spawn Character");
                 return;
             }
 
+            _characterRequests.Add((prefab, player));
+        }
+
+        internal void SpawnAllCharacters()
+        {
+            Debug.Log("[SERVER] Spawning all player characters");
+            foreach (var (prefab, player) in _characterRequests)
+            {
+                SpawnCharacter(prefab, player);
+            }
+        }
+
+        private void SpawnCharacter(GameObject prefab, PlayerRef player)
+        {
             var position = positions[^1].position;
             positions.RemoveAt(positions.Count - 1);
 

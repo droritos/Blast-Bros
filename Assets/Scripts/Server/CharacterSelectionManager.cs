@@ -9,6 +9,7 @@ namespace Game.Server
     public class CharacterSelectionManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         [SerializeField] private GameData gameData;
+        [SerializeField] private PlayerReadyManager playerReadyManager;
         [SerializeField] private GameCharacterSpawner spawner;
 
         private readonly BidirectionalDictionary<int, PlayerRef> _characterOwners = new();
@@ -72,7 +73,9 @@ namespace Game.Server
 
             int characterIdx = _characterOwners.Reverse[info.Source];
             var prefab = gameData.characters[characterIdx].prefab;
-            spawner.SpawnCharacter(prefab, info.Source);
+            spawner.RequestCharacterSpawnAtReady(prefab, info.Source);
+
+            playerReadyManager.MarkPlayerReady(info.Source);
         }
         #endregion
 
