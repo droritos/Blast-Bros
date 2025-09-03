@@ -1,4 +1,5 @@
 using System.Linq;
+using Game.Client.Misc;
 using Game.Data;
 using Unity.Multiplayer.Playmode;
 using UnityEngine;
@@ -54,7 +55,8 @@ namespace Game
             }
             else
             {
-                await Client.ClientSessionUtils.Connect(sessionConfig);
+                string playerName = SillyId.GenerateGamertag();
+                await Client.ClientSessionUtils.Connect(sessionConfig, playerName: playerName);
             }
         }
     }
