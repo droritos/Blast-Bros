@@ -80,7 +80,7 @@ namespace Game.Server
             }
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RequestCreatePlayerObjectRPC(string name = "Unknown", RpcInfo info = default)
         {
             var player = info.Source;
