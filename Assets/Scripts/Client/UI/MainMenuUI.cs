@@ -14,7 +14,7 @@ namespace Game.Client.UI
         [SerializeField] private CanvasGroup clientStartGameCanvas;
         [SerializeField] private CanvasGroup hostStartGameCanvas;
 
-        [SerializeField] MenuNavigationController menuNavigationController;
+        [SerializeField] private MenuNavigationController menuNavigationController;
 
         private void OnEnable()
         {
@@ -67,7 +67,9 @@ namespace Game.Client.UI
         private void OnValidate()
         {
             if(!menuNavigationController)
-                menuNavigationController = FindObjectOfType<MenuNavigationController>();
+            {
+                menuNavigationController = FindAnyObjectByType<MenuNavigationController>();
+            }
         }
         #endif
     }
