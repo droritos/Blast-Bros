@@ -31,24 +31,10 @@ namespace Game.Server
         }
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void ShowReadyCanvasForPlayerRPC([RpcTarget] PlayerRef player) => ShowReadyCanvas();
+        private void ShowReadyCanvasForPlayerRPC([RpcTarget] PlayerRef player) => readyCanvasGroup.ShowCanvasGroup();
 
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
-        private void HideReadyCanvasForAllPlayersRPC() => HideReadyCanvas();
-
-        private void ShowReadyCanvas()
-        {
-            readyCanvasGroup.alpha = 1;
-            readyCanvasGroup.blocksRaycasts = true;
-            readyCanvasGroup.interactable = true;
-        }
-
-        private void HideReadyCanvas()
-        {
-            readyCanvasGroup.alpha = 0;
-            readyCanvasGroup.blocksRaycasts = false;
-            readyCanvasGroup.interactable = false;
-        }
+        private void HideReadyCanvasForAllPlayersRPC() => readyCanvasGroup.HideCanvasGroup();
 
         private void CheckIfAllAreReady()
         {

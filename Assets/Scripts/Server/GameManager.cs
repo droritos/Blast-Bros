@@ -16,6 +16,7 @@ namespace Game.Server
         [SerializeField] private GridManager gridManager;
         [SerializeField] private PickupSpawner pickupSpawner;
         [SerializeField] private GameCharacterSpawner characterSpawner;
+        [SerializeField] private GameEndManager gameEndManager;
 
         public static GameManager instance;
 
@@ -90,13 +91,17 @@ namespace Game.Server
 
         private void HandlePlayerDeath(GameObject colliderGameObject)
         {
-            var playerNetworkObject = colliderGameObject.transform.parent.gameObject.GetComponent<NetworkObject>();
+            var physicalPlayerObject = colliderGameObject.GetComponent<NetworkObject>();
+            var player = physicalPlayerObject.InputAuthority;
+            var playerNetworkObject = Runner.GetPlayerObject(player);
             var playerData = playerNetworkObject.GetComponent<PlayerData>();
 
-            Debug.Log($"[SERVER] Player {playerNetworkObject.InputAuthority} ({playerData.PlayerName}) had died");
-            Runner.Despawn(playerNetworkObject);
+            Debug.Log($"[SERVER] Player {player} ({playerData.PlayerName}) should die now...");
+            gameEndManager.MarkPlayerAsDead(player, playerData);
 
-            // TODO
+            Debug.Log($"[SERVER] Despawning {player} ({playerData.PlayerName})");
+            Runner.Despawn(physicalPlayerObject);
+            Runner.Despawn(playerNetworkObject);
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

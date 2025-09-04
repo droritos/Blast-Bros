@@ -21,7 +21,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5667201425294262940, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
       propertyPath: m_Name
-      value: WaitingForOtherPlayers Variant
+      value: PlayerDied
+      objectReference: {fileID: 0}
+    - target: {fileID: 5667201425294262940, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8732459812736228161, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
       propertyPath: m_Pivot.x
@@ -106,5 +110,25 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5667201425294262940, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2218562223961079732}
   m_SourcePrefab: {fileID: 100100000, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
+--- !u!1 &4397873456506886067 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5667201425294262940, guid: 31c1d5e040717cf43a31e4ccbc729261, type: 3}
+  m_PrefabInstance: {fileID: 8335480319825597743}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &2218562223961079732
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4397873456506886067}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
