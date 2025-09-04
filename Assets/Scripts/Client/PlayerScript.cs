@@ -53,12 +53,10 @@ namespace Game.Client
             {
                 capsuleCollider = GetComponent<CapsuleCollider>();
             }
-                /*
             if (!_bombInputFeedback)
             {
                 _bombInputFeedback = GetComponentInChildren<BombInputFeedback>();
             }
-                */
             if (!playerRigidbody)
             {
                 playerRigidbody = GetComponent<Rigidbody>();

@@ -162,8 +162,30 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8302340325300869334, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4013920936638097854}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7347181313287193536, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 883971972509897175}
   m_SourcePrefab: {fileID: 100100000, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+--- !u!1 &761823008530989638 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7347181313287193536, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+  m_PrefabInstance: {fileID: 8026795004429762950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &883971972509897175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761823008530989638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e1e23e46af4267bddff0be8ffa6732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
+  _fakeBombPrefab: {fileID: 3564519651396155867, guid: 42743f56a3d442e4ea78fe754824fe0c, type: 3}
 --- !u!4 &2041028994981108048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8302340325300869334, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}

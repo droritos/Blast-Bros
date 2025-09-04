@@ -22,7 +22,6 @@ namespace Game.Server
             _playerBombCounts[player] = new PlayerInventory(); // Every player starts with one bomb
             UpdateBombCountClient(player);
         }
-
         public void PlayerLeft(PlayerRef player) => _playerBombCounts.Remove(player);
 
         #region Bomb Management

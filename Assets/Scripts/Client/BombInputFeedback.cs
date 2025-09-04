@@ -1,3 +1,4 @@
+using Game.Server;
 using UnityEngine;
 
 namespace Game.Client
@@ -34,7 +35,9 @@ namespace Game.Client
 
         private void PlaceFakeBomb()
         {
-            GameObject fakeBombInstance = Instantiate(_fakeBombPrefab, transform.position, Quaternion.identity);
+            Vector3 alignedPosition = GameManager.instance.AlignToClosestGridPosition(transform.position);
+
+            GameObject fakeBombInstance = Instantiate(_fakeBombPrefab,alignedPosition , Quaternion.identity);
             _elapsedTime = 0f;
 
             Destroy(fakeBombInstance,_cooldown / 2f);

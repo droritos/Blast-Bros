@@ -41,6 +41,7 @@ namespace Game.Server
             pickupSpawner.OnPickUpCollected -= playerInventoriesManager.IncreaseBombCapacity;
             playerReadyManager.OnAllPlayersReady -= characterSpawner.SpawnAllCharacters;
         }
+        public Vector3 AlignToClosestGridPosition(Vector3  position) => gridData.AlignToClosestGridPosition(position);
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
         public void RequestBombAtLocationRPC(Vector3 position, RpcInfo info = default)
@@ -57,6 +58,7 @@ namespace Game.Server
 
             StartCoroutine(DoExplosion(position, bombInstance, info.Source));
         }
+
 
         private IEnumerator DoExplosion(Vector3 bombPosition, NetworkObject bombInstance, PlayerRef playerRef)
         {

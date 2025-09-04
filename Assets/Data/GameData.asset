@@ -11,14 +11,14 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dd97da4a11264063903c3bb2da00f06d, type: 3}
   m_Name: GameData
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
   defaultGameSessionConfig:
     sessionName: TestSession
     retryDelaySeconds: 1
     levelSceneName: Level Scene
     maxRetryAttempts: 5
-    numMaxPlayers: 2
+    numMaxPlayers: 1
   characters:
   - name: Barbarian
     prefab: {fileID: 3576306475107324456, guid: 771ba9a56569eb143b955b1405ca311d, type: 3}
@@ -29,9 +29,6 @@ MonoBehaviour:
   - name: Knight
     prefab: {fileID: 3576306475107324456, guid: a3f60814eda06504f94a5e27c779e3b0, type: 3}
     characterIcon: {fileID: 21300000, guid: 51c12ea7ddd5a39449f7e91b89c48b84, type: 3}
-  - name: Mage
-    prefab: {fileID: 3576306475107324456, guid: d7cc31dbb1de0a8448602f9823997e34, type: 3}
-    characterIcon: {fileID: 21300000, guid: c50a83e8ef2bcf24fb77b8beeba9d13c, type: 3}
   - name: Rogue
     prefab: {fileID: 3576306475107324456, guid: 2a4afb1a283c8044fad7c04eee3ef4ca, type: 3}
     characterIcon: {fileID: 21300000, guid: c0790a2cf0d49fe499aa9f8538ccc64f, type: 3}
