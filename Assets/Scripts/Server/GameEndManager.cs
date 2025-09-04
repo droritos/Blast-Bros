@@ -13,6 +13,8 @@ namespace Game.Server
         public string name;
         public int characterIdx;
         public double time;
+
+        public override string ToString() => $"LeaderboardEntry({name}, {characterIdx}, {time})";
     }
 
     public class GameEndManager : NetworkBehaviour
@@ -24,13 +26,14 @@ namespace Game.Server
         private readonly List<LeaderboardEntry> _leaderboards = new();
         internal void MarkPlayerAsDead(PlayerRef player, string playerName,int characterIdx)
         {
-            Debug.Log($"[SERVER] Player {player} ({playerName}) had died");
+            Debug.Log($"[SERVER] Player {player} ({playerName}) had died at {Runner.SimulationTime}");
             var entry = new LeaderboardEntry
             {
                 name = playerName,
                 characterIdx = characterIdx,
-                time = Runner.RemoteRenderTime
+                time = Runner.SimulationTime
             };
+            Debug.Log($"$[SERVER] leaderboard entry: {entry}");
             _leaderboards.Add(entry);
 
             ShowPlayerDiedCanvasRPC(player);
@@ -95,6 +98,7 @@ namespace Game.Server
                 {
                     name = players[i], characterIdx = characterIdxs[i], time = times[i]
                 };
+                Debug.Log($"[CLIENT] Reconstructed entry: {entries[i]}");
             }
 
             OnGameEnd?.Invoke(entries);
