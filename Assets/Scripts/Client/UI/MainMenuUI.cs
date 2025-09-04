@@ -14,6 +14,8 @@ namespace Game.Client.UI
         [SerializeField] private CanvasGroup clientStartGameCanvas;
         [SerializeField] private CanvasGroup hostStartGameCanvas;
 
+        [SerializeField] MenuNavigationController menuNavigationController;
+
         private void OnEnable()
         {
             startGameButton.onClick.AddListener(StartGame);
@@ -35,6 +37,8 @@ namespace Game.Client.UI
             clientStartGameCanvas.interactable = true;
             clientStartGameCanvas.blocksRaycasts = true;
             clientStartGameCanvas.alpha = 1;
+
+            menuNavigationController.ChangeCurrentToClient();
         }
 
         private void HostGameServer()
@@ -42,6 +46,8 @@ namespace Game.Client.UI
             hostStartGameCanvas.interactable = true;
             hostStartGameCanvas.blocksRaycasts = true;
             hostStartGameCanvas.alpha = 1;
+
+            menuNavigationController.ChangeCurrentToServer();
         }
 
         private void QuitGame()
@@ -56,5 +62,13 @@ namespace Game.Client.UI
             #endif
             Application.Quit();
         }
+
+        #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if(!menuNavigationController)
+                menuNavigationController = FindObjectOfType<MenuNavigationController>();
+        }
+        #endif
     }
 }
