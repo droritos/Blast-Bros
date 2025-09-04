@@ -37,7 +37,7 @@ namespace Game.Client
 
                 if (result.Ok)
                 {
-                    await HandleSuccessfulConnection(runner, playerName);
+                    await HandleSuccessfulConnection(playerName);
                     return true;
                 }
 
@@ -55,7 +55,7 @@ namespace Game.Client
             return false;
         }
 
-        private static async Awaitable HandleSuccessfulConnection(NetworkRunner runner, string playerName)
+        private static async Awaitable HandleSuccessfulConnection(string playerName)
         {
             Debug.Log("[CLIENT] Successfully connected to session!");
             while (GameManager.instance?.Object?.IsValid != true)
@@ -64,7 +64,7 @@ namespace Game.Client
                 await Awaitable.WaitForSecondsAsync(0.1f);
             }
 
-            GameManager.instance.RequestCreatePlayerObjectRPC(name: playerName);
+            GameManager.instance.RequestCreatePlayerObjectRPC(playerName: playerName);
         }
 
         private static NetworkRunner CreateNetworkRunner(string name)

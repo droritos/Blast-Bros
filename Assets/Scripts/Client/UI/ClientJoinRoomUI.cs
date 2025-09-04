@@ -30,7 +30,7 @@ namespace Client.UI
         private void JoinGameButton()
         {
             var sessionConfig = GameSessionConfig.GetCurrentSessionConfig(gameData);
-            _ = ClientSessionUtils.Connect(sessionConfig, playerName.text);
+            _ = ClientSessionUtils.Connect(sessionConfig, playerName: playerName.text);
         }
 
         private void RandomizeNicknameButton() => playerName.text = SillyId.GenerateGamertag();

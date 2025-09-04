@@ -38,6 +38,11 @@ namespace Game.Client.UI
             _localPlayerData.OnPlayerNameChanged += OnPlayerNameChanged;
             _localPlayerData.OnCharacterIndexChanged += OnCharacterIndexChanged;
 
+            InitializeProfile();
+        }
+
+        private void InitializeProfile()
+        {
             OnPlayerNameChanged(_localPlayerData.PlayerName.Value);
             OnCharacterIndexChanged(_localPlayerData.CharacterIndex);
             UpdateBombStatus(1, 1);
@@ -45,8 +50,9 @@ namespace Game.Client.UI
 
         private void OnPlayerNameChanged(string newName) => playerNameTMP.SetText(newName);
 
-        private void OnCharacterIndexChanged(int characterIdx) => characterIcon.sprite =
-            characterIdx < 0 ? null : gameData.characters[characterIdx].characterIcon;
+        private void OnCharacterIndexChanged(int characterIdx) =>
+            characterIcon.sprite =
+                characterIdx < 0 ? null : gameData.characters[characterIdx].characterIcon;
 
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
@@ -60,7 +66,7 @@ namespace Game.Client.UI
             playerInventoriesManager.OnBombUseFailed -= OnBombUseFailed;
         }
 
-        private void OnBombUseFailed() => Debug.Log("FAILED!!!!");
+        private void OnBombUseFailed() => Debug.Log("FAILED!!!!"); // TODO: vfx?
 
         private void OnBombCountUpdated(int currentBombs, int totalBombs) => UpdateBombStatus(currentBombs, totalBombs);
 

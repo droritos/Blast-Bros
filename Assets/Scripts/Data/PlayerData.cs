@@ -15,9 +15,9 @@ namespace Game
         public event Action<string> OnPlayerNameChanged;
         public event Action<int> OnCharacterIndexChanged;
 
-        // Client requests updates, host validates and applies them
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void RPC_UpdatePlayerName(string newPlayerName)
+        public void UpdatePhysicalPlayerObject(NetworkObject newPhysicalPlayerObject) => PhysicalPlayerObject = newPhysicalPlayerObject;
+
+        public void UpdatePlayerName(string newPlayerName)
         {
             if (Object.HasStateAuthority && !string.IsNullOrEmpty(newPlayerName))
             {
@@ -25,30 +25,11 @@ namespace Game
             }
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
-        public void RPC_UpdateCharacterIndex(int newCharacterIndex)
+        public void UpdateCharacterIndex(int newCharacterIndex)
         {
             if (Object.HasStateAuthority && newCharacterIndex >= 0)
             {
                 CharacterIndex = newCharacterIndex;
-            }
-        }
-
-        public void UpdatePhysicalPlayerObject(NetworkObject newPhysicalPlayerObject) => PhysicalPlayerObject = newPhysicalPlayerObject;
-
-        public void UpdatePlayerName(string newPlayerName)
-        {
-            if (Object.HasInputAuthority)
-            {
-                RPC_UpdatePlayerName(newPlayerName);
-            }
-        }
-
-        public void UpdateCharacterIndex(int newCharacterIndex)
-        {
-            if (Object.HasInputAuthority)
-            {
-                RPC_UpdateCharacterIndex(newCharacterIndex);
             }
         }
     }

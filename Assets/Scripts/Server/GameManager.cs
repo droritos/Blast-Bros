@@ -96,16 +96,17 @@ namespace Game.Server
             var playerNetworkObject = Runner.GetPlayerObject(player);
             var playerData = playerNetworkObject.GetComponent<PlayerData>();
 
-            Debug.Log($"[SERVER] Player {player} ({playerData.PlayerName}) should die now...");
+            var playerName = playerData.PlayerName.ToString();
+            Debug.Log($"[SERVER] Player {player} ({playerName}) should die now...");
             gameEndManager.MarkPlayerAsDead(player, playerData);
 
-            Debug.Log($"[SERVER] Despawning {player} ({playerData.PlayerName})");
+            Debug.Log($"[SERVER] Despawning {player} ({playerName})");
             Runner.Despawn(physicalPlayerObject);
             Runner.Despawn(playerNetworkObject);
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]
-        public void RequestCreatePlayerObjectRPC(string name = "Unknown", RpcInfo info = default)
+        public void RequestCreatePlayerObjectRPC(string playerName = "Unknown", RpcInfo info = default)
         {
             var player = info.Source;
             var sessionPrefab = Resources.Load<GameObject>("PlayerData");
@@ -115,7 +116,7 @@ namespace Game.Server
             Debug.Log($"[GLOBAL] Spawned {playerDataGameObject} for {player}");
 
             var playerData = playerDataGameObject.GetComponent<PlayerData>();
-            playerData.UpdatePlayerName(name);
+            playerData.UpdatePlayerName(playerName);
         }
     }
 }
