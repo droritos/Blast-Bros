@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.Server;
 using UnityEngine;
@@ -20,6 +21,10 @@ namespace Game.Client.UI
         private int _selectedCharacterIdx;
         private bool _isPlayerReady;
 
+        #region  << Buttons Handling For Gamepad >>
+        private GameObject _lastValidSelection;
+        #endregion
+
         private void Awake()
         {
             for (int characterIdx = 0; characterIdx < gameData.characters.Length; characterIdx++)
@@ -30,7 +35,10 @@ namespace Game.Client.UI
             readyButton.interactable = false;
         }
 
-        private void Start() => EventSystem.current.SetSelectedGameObject(_characterButtons[0].gameObject);
+        private void Start()
+        {
+            StartCoroutine(SelectFirstButtonNextFrame());
+        }
 
         private void OnEnable()
         {
@@ -45,7 +53,29 @@ namespace Game.Client.UI
             manager.OnUpdateCharacterMarkedStatus -= ManagerOnOnUpdateCharacterMarkedStatus;
             readyButton.onClick.RemoveListener(OnPlayerReady);
         }
+        void Update()
+        {
+            var currentSelection = EventSystem.current.currentSelectedGameObject;
 
+            if (currentSelection == null)
+            {
+                // Restore last valid selection, or fallback to first character button
+                if (_lastValidSelection != null)
+                {
+                    EventSystem.current.SetSelectedGameObject(_lastValidSelection);
+                }
+                else if (_characterButtons.Count > 0)
+                {
+                    _lastValidSelection = _characterButtons[0].gameObject;
+                    EventSystem.current.SetSelectedGameObject(_lastValidSelection);
+                }
+            }
+            else
+            {
+                // Save this as the last valid selection
+                _lastValidSelection = currentSelection;
+            }
+        }
         private void OnPlayerReady()
         {
             Debug.Log("Player is now ready...");
@@ -117,6 +147,13 @@ namespace Game.Client.UI
 
             _selectedCharacterIdx = characterIdx;
             readyButton.interactable = !_isPlayerReady;
+        }
+
+        private IEnumerator SelectFirstButtonNextFrame()
+        {
+            yield return null; // wait one frame
+            if (_characterButtons.Count > 0)
+                EventSystem.current.SetSelectedGameObject(_characterButtons[0].gameObject);
         }
     }
 }
