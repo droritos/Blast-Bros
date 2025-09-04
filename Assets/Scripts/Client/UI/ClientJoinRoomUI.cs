@@ -15,6 +15,8 @@ namespace Client.UI
         [SerializeField] private Button joinButton;
         [SerializeField] private Button randomizeNicknameButton;
 
+        private bool _startedSession;
+
         private void OnEnable()
         {
             joinButton.onClick.AddListener(JoinGameButton);
@@ -29,8 +31,12 @@ namespace Client.UI
 
         private void JoinGameButton()
         {
+            if (_startedSession) return;
+
             var sessionConfig = GameSessionConfig.GetCurrentSessionConfig(gameData);
             _ = ClientSessionUtils.Connect(sessionConfig, playerName: playerName.text);
+
+            _startedSession = true;
         }
 
         private void RandomizeNicknameButton() => playerName.text = SillyId.GenerateGamertag();
