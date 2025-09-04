@@ -17,3 +17,6 @@ MonoBehaviour:
   height: 11
   spacing: 2
   blockYOffset: 2
+  cachedXOffset: 16
+  cachedZOffset: 10
+  inverseSpacing: 0.5

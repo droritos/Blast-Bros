@@ -15,32 +15,32 @@ namespace Game
         public float blockYOffset = 2f;
 
         // Cached values to avoid repeated calculations
-        private float _cachedXOffset;
-        private float _cachedZOffset;
-        private float _inverseSpacing;
+        [SerializeField] [HideInInspector] private float cachedXOffset;
+        [SerializeField] [HideInInspector] private float cachedZOffset;
+        [SerializeField] [HideInInspector] private float inverseSpacing;
 
         private void OnValidate() => CacheOffsets();
         private void CacheOffsets()
         {
-            _cachedXOffset = (width - 1) * spacing * 0.5f;
-            _cachedZOffset = (height - 1) * spacing * 0.5f;
-            _inverseSpacing = 1f / spacing;
+            cachedXOffset = (width - 1) * spacing * 0.5f;
+            cachedZOffset = (height - 1) * spacing * 0.5f;
+            inverseSpacing = 1f / spacing;
         }
 
         public int GetLinearCoordinates(int x, int z) => z * width + x;
 
         public Vector3 GridPositionToWorldPosition(int x, int z) =>
             new(
-                startPosition.x + x * spacing - _cachedXOffset,
+                startPosition.x + x * spacing - cachedXOffset,
                 startPosition.y + blockYOffset,
-                startPosition.z + z * spacing - _cachedZOffset
+                startPosition.z + z * spacing - cachedZOffset
             );
 
         public (int x, int z) WorldPositionToGridPosition(Vector3 worldPos)
         {
             // Calculate relative position and convert to grid coordinates in one step
-            int x = Mathf.RoundToInt((worldPos.x - startPosition.x + _cachedXOffset) * _inverseSpacing);
-            int z = Mathf.RoundToInt((worldPos.z - startPosition.z + _cachedZOffset) * _inverseSpacing);
+            int x = Mathf.RoundToInt((worldPos.x - startPosition.x + cachedXOffset) * inverseSpacing);
+            int z = Mathf.RoundToInt((worldPos.z - startPosition.z + cachedZOffset) * inverseSpacing);
 
             return (x, z);
         }
