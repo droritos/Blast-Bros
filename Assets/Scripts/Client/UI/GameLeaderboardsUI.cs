@@ -40,7 +40,6 @@ namespace Game.Client.UI
             leaderboardsCanvas.blocksRaycasts = true;
             leaderboardsCanvas.interactable = true;
 
-            Array.Sort(results, (entry, otherEntry) => entry.time.CompareTo(otherEntry.time));
             RenderWinner(results);
 
             foreach (var otherEntry in results.Skip(1))

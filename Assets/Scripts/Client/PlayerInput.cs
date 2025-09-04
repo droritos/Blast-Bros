@@ -14,7 +14,6 @@ namespace Game.Client
         PlaceBombButton
     }
 
-    [RequireComponent(typeof(NetworkTransform))]
     public class PlayerInput : NetworkBehaviour, INetworkRunnerCallbacks
     {
         private InputSystemActions _inputSystemActions;
