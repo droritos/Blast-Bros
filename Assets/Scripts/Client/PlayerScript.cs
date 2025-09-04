@@ -17,7 +17,7 @@ namespace Game.Client
 
         [Header("Bomb Related Stuff")]
         [SerializeField] private BombInputFeedback _bombInputFeedback;
-        public event UnityAction OnTryPlaceBomb;
+        private event UnityAction OnTryPlaceBomb;
 
         private bool _isSprinting;
         private NetworkButtons _prevButtons;
@@ -29,13 +29,11 @@ namespace Game.Client
             base.Spawned();
             OnTryPlaceBomb += _bombInputFeedback.TryPlaceFakeBomb;
         }
-/*
         public override void Despawned(NetworkRunner runner, bool hasState)
         {
             base.Despawned(runner, hasState);
             OnTryPlaceBomb -= _bombInputFeedback.TryPlaceFakeBomb;
         }
-*/
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -52,6 +50,11 @@ namespace Game.Client
             if (!capsuleCollider)
             {
                 capsuleCollider = GetComponent<CapsuleCollider>();
+            }
+
+            if (!_bombInputFeedback)
+            {
+                _bombInputFeedback = GetComponentInChildren<BombInputFeedback>();
             }
 
             var networkAnimator = GetComponentInChildren<NetworkMecanimAnimator>();

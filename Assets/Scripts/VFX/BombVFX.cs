@@ -14,6 +14,8 @@ namespace Game.VFX
 
         private MotionHandle _sequenceHandle;
 
+        [SerializeField] private bool _isFake = false;
+
         public void StopSequence()
         {
             if(_sequenceHandle.IsActive())
@@ -43,6 +45,8 @@ namespace Game.VFX
                     .WithOnComplete(DoPrePop)
                     .BindToEulerAngles(transform));
             }
+
+            if(_isFake) return;
 
             // Shrink -> Pop -> Explode
             sequence.Append(LMotion.Create(Vector3.one, Vector3.one * effectSettings.shrinkScale, effectSettings.shrinkTime).WithEase(Ease.InQuad)

@@ -34,8 +34,10 @@ namespace Game.Client
 
         private void PlaceFakeBomb()
         {
-            Instantiate(_fakeBombPrefab, transform.position, Quaternion.identity);
+            GameObject fakeBombInstance = Instantiate(_fakeBombPrefab, transform.position, Quaternion.identity);
             _elapsedTime = 0f;
+
+            Destroy(fakeBombInstance,_cooldown / 2f);
         }
     }
 }

@@ -48,6 +48,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 360375151596564303, guid: e755a9cfda58b67439c68f0e70599c46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1728280593283003582, guid: e755a9cfda58b67439c68f0e70599c46, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -148,6 +156,10 @@ PrefabInstance:
       propertyPath: animator
       value: 
       objectReference: {fileID: 2171343081430435602}
+    - target: {fileID: 4724343667886806184, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+      propertyPath: _bombInputFeedback
+      value: 
+      objectReference: {fileID: 5356049132919539159}
     - target: {fileID: 6828987889672065966, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
       propertyPath: m_Name
       value: Knight
@@ -158,8 +170,30 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8302340325300869334, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4013920936638097854}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7347181313287193536, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5356049132919539159}
   m_SourcePrefab: {fileID: 100100000, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+--- !u!1 &761823008530989638 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7347181313287193536, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
+  m_PrefabInstance: {fileID: 8026795004429762950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5356049132919539159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761823008530989638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5e1e23e46af4267bddff0be8ffa6732, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _explosionEffectSettings: {fileID: 11400000, guid: 456911d7c415d8e43b0fa7814efcef5e, type: 2}
+  _fakeBombPrefab: {fileID: 3564519651396155867, guid: 42743f56a3d442e4ea78fe754824fe0c, type: 3}
 --- !u!4 &2041028994981108048 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8302340325300869334, guid: 7d2906f30010f1946b33d0ac6b9a9cdb, type: 3}
