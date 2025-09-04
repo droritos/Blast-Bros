@@ -96,13 +96,14 @@ namespace Game.Server
             var playerNetworkObject = Runner.GetPlayerObject(player);
             var playerData = playerNetworkObject.GetComponent<PlayerData>();
 
-            var playerName = playerData.PlayerName.ToString();
-            Debug.Log($"[SERVER] Player {player} ({playerName}) should die now...");
-            gameEndManager.MarkPlayerAsDead(player, playerData);
+            int characterIdx = playerData.CharacterIndex;
+            string playerName = playerData.PlayerName.ToString();
 
             Debug.Log($"[SERVER] Despawning {player} ({playerName})");
             Runner.Despawn(physicalPlayerObject);
             Runner.Despawn(playerNetworkObject);
+
+            gameEndManager.MarkPlayerAsDead(player, playerName, characterIdx);
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority, HostMode = RpcHostMode.SourceIsHostPlayer)]

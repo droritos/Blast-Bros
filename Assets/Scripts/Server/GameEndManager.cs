@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
@@ -21,13 +22,13 @@ namespace Game.Server
         public event Action<LeaderboardEntry[]> OnGameEnd;
 
         private readonly List<LeaderboardEntry> _leaderboards = new();
-        internal void MarkPlayerAsDead(PlayerRef player, PlayerData playerData)
+        internal void MarkPlayerAsDead(PlayerRef player, string playerName,int characterIdx)
         {
-            Debug.Log($"[SERVER] Player {player} ({playerData.PlayerName}) had died");
+            Debug.Log($"[SERVER] Player {player} ({playerName}) had died");
             var entry = new LeaderboardEntry
             {
-                name = playerData.PlayerName.Value,
-                characterIdx = playerData.CharacterIndex,
+                name = playerName,
+                characterIdx = characterIdx,
                 time = Runner.RemoteRenderTime
             };
             _leaderboards.Add(entry);
@@ -67,6 +68,14 @@ namespace Game.Server
             return maxPlayers;
         }
 
+        private IEnumerator DelayedShutdown()
+        {
+            Debug.Log("[CLIENT] Starting delayed shutdown...");
+            yield return new WaitForSeconds(0.1f);
+            Debug.Log("[CLIENT] Shutting down...");
+            Runner.Shutdown();
+        }
+
         #region Outbound RPCs
         [Rpc(RpcSources.StateAuthority, RpcTargets.All)]
         private void ShowPlayerDiedCanvasRPC([RpcTarget] PlayerRef player) => playerDiedMessageCanvas.ShowCanvasGroup();
@@ -88,8 +97,7 @@ namespace Game.Server
 
             OnGameEnd?.Invoke(entries);
 
-            Debug.Log("[CLIENT] Game ended, closing runner");
-            Runner.Shutdown();
+            StartCoroutine(DelayedShutdown());
         }
         #endregion
     }
