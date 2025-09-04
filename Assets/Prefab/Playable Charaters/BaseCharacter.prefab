@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 3865689441722091541}
   - component: {fileID: -7071315589187693747}
   - component: {fileID: -7090178979598174420}
+  - component: {fileID: 8396191002990244055}
   - component: {fileID: -6089059632329445507}
-  - component: {fileID: 227520099655188734}
   - component: {fileID: 8892321198141543731}
   - component: {fileID: 4724343667886806184}
   m_Layer: 0
@@ -106,11 +106,34 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 8396191002990244055}
   - {fileID: -6089059632329445507}
-  - {fileID: 227520099655188734}
   - {fileID: 8892321198141543731}
   - {fileID: 4724343667886806184}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &8396191002990244055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6828987889672065966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a591d221a634417e9827eb58e17de84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!114 &-6089059632329445507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,23 +152,6 @@ MonoBehaviour:
   StateHashes: 0000000013a2de07d1d01fa5f5620a77c6d12f402afa8626a8b5caa334c163f2077246c52b1a167c44563d8ba8f6ef9205b3f631238331799a56be64e2464665809f03c0
   TriggerHashes: 000000002afa86260bd257de
   TotalWords: 3
---- !u!114 &227520099655188734
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6828987889672065966}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _stateAuthorityChangeErrorCorrectionDelta: 0
-  SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
 --- !u!114 &8892321198141543731
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,6 +180,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   capsuleCollider: {fileID: 3865689441722091541}
   speed: 5
+  playerRigidbody: {fileID: -7071315589187693747}
 --- !u!1 &7347181313287193536
 GameObject:
   m_ObjectHideFlags: 0

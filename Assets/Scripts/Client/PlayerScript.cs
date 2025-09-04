@@ -1,6 +1,7 @@
 using Fusion;
 using Game.Data;
 using Game.Server;
+using NUnit.Framework;
 using UnityEngine;
 
 namespace Game.Client
@@ -13,11 +14,12 @@ namespace Game.Client
         [SerializeField] private Animator animator;
         [SerializeField] private CapsuleCollider capsuleCollider;
         [SerializeField] private float speed = 5f;
+        [SerializeField] private Rigidbody playerRigidbody;
 
         private bool _isSprinting;
         private NetworkButtons _prevButtons;
 
-        private const float SpeedMultiplier = 1.5f;
+        private const float SpeedMultiplier = 2.5f;
 
 #if UNITY_EDITOR
         private void OnValidate()
@@ -37,6 +39,11 @@ namespace Game.Client
                 capsuleCollider = GetComponent<CapsuleCollider>();
             }
 
+            if (!playerRigidbody)
+            {
+                playerRigidbody = GetComponent<Rigidbody>();
+            }
+
             var networkAnimator = GetComponentInChildren<NetworkMecanimAnimator>();
             networkAnimator.Animator = animator;
         }
@@ -44,42 +51,41 @@ namespace Game.Client
 
         public override void FixedUpdateNetwork()
         {
-            if (!GetInput(out PlayerInputState input))
+            if((!HasInputAuthority && !HasStateAuthority) || !GetInput(out PlayerInputState input))
             {
                 return;
             }
 
-            HandleMovement(input);
             HandleButtonInput(input);
+            HandleMovement(input);
 
             _prevButtons = input.buttons;
         }
 
         private void HandleMovement(PlayerInputState input)
         {
-            var actualMove = new Vector3(input.move.x, 0f, input.move.y);
-            var deltaMove = actualMove * (speed * Runner.DeltaTime);
+            var inputMove = new Vector3(input.move.x, 0f, input.move.y);
 
-            if (actualMove != Vector3.zero)
+            if (inputMove.sqrMagnitude < 0.01f)
             {
-                transform.rotation = Quaternion.LookRotation(actualMove);
+                return;
             }
 
-            if (_isSprinting)
+            var deltaMove = inputMove * (speed * Runner.DeltaTime) * (_isSprinting ? SpeedMultiplier : 1);
+
+            // Use the rigidbody's actual collider shape for collision detection
+            if (playerRigidbody.SweepTest(deltaMove.normalized, out _, deltaMove.magnitude, QueryTriggerInteraction.Ignore))
             {
-                deltaMove *= SpeedMultiplier;
+                return;
             }
 
-            if (!Physics.SphereCast(transform.position, capsuleCollider.radius, actualMove.normalized, out RaycastHit hit, deltaMove.magnitude, LayerMask.GetMask("Default"), QueryTriggerInteraction.Ignore))
-            {
-                transform.position += deltaMove;
+            Debug.Log(deltaMove);
 
-                float speedPercent = actualMove.magnitude;
-                if (_isSprinting)
-                    speedPercent *= SpeedMultiplier;
+            playerRigidbody.MoveRotation(Quaternion.LookRotation(inputMove));
+            playerRigidbody.MovePosition(playerRigidbody.position + deltaMove);
 
-                animator.SetFloat(AnimatorParams.Speed, speedPercent);
-            }
+            float speedPercent = inputMove.magnitude * (_isSprinting ? SpeedMultiplier : 1);
+            animator.SetFloat(AnimatorParams.Speed, speedPercent);
         }
 
         private void HandleButtonInput(PlayerInputState input)
