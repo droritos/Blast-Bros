@@ -14,7 +14,6 @@ namespace Game.Server
     public class PlayerInventoriesManager : NetworkBehaviour, IPlayerJoined, IPlayerLeft
     {
         private readonly Dictionary<PlayerRef, PlayerInventory> _playerBombCounts = new();
-
         public event Action<int, int> OnBombCountUpdated;
         public event Action OnBombUseFailed;
 

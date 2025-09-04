@@ -2,6 +2,7 @@ using Fusion;
 using Game.Data;
 using Game.Server;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Game.Client
 {
@@ -14,11 +15,27 @@ namespace Game.Client
         [SerializeField] private CapsuleCollider capsuleCollider;
         [SerializeField] private float speed = 5f;
 
+        [Header("Bomb Related Stuff")]
+        [SerializeField] private BombInputFeedback _bombInputFeedback;
+        public event UnityAction OnTryPlaceBomb;
+
         private bool _isSprinting;
         private NetworkButtons _prevButtons;
 
         private const float SpeedMultiplier = 1.5f;
 
+        public override void Spawned()
+        {
+            base.Spawned();
+            OnTryPlaceBomb += _bombInputFeedback.TryPlaceFakeBomb;
+        }
+/*
+        public override void Despawned(NetworkRunner runner, bool hasState)
+        {
+            base.Despawned(runner, hasState);
+            OnTryPlaceBomb -= _bombInputFeedback.TryPlaceFakeBomb;
+        }
+*/
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -93,7 +110,10 @@ namespace Game.Client
             {
                 GameManager.instance.RequestBombAtLocationRPC(transform.position);
 
-                animator.SetTrigger(AnimationTriggers.PlaceBomb);
+                animator.SetTrigger(AnimationTriggers.PlaceBomb); // Change Animation!
+
+                OnTryPlaceBomb?.Invoke();
+
             }
             if (input.buttons.WasPressed(_prevButtons, PlayerInputButtons.SprintButton))
             {
