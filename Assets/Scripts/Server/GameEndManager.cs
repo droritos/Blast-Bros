@@ -49,7 +49,9 @@ namespace Game.Server
             Debug.Log("[SERVER] All players have died");
             Debug.Log("[SERVER] Showing leaderboards...");
 
-            _leaderboards.Sort((entry, otherEntry) => entry.time.CompareTo(otherEntry.time));
+            // Sort by highest time first (best score at top)
+            // CompareTo: otherEntry.time.CompareTo(entry.time) puts larger values first
+            _leaderboards.Sort((entry, otherEntry) => otherEntry.time.CompareTo(entry.time));
 
             string[] players = _leaderboards.Select(x => x.name).ToArray();
             int[] characterIdxs = _leaderboards.Select(x => x.characterIdx).ToArray();
